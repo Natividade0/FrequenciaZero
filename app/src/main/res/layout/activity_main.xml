@@ -11,6 +11,50 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <FrameLayout
+        android:id="@+id/titleScreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.frequenciazero.TitleForestView
+            android:id="@+id/titleArt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="28dp">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/titleLogo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:letterSpacing="0.20"
+                android:lineSpacingExtra="8dp"
+                android:text="FREQUÊNCIA\nZERO"
+                android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
+                android:textColor="@color/fz_text" />
+
+            <Space
+                android:layout_width="1dp"
+                android:layout_height="190dp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/startPrompt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:letterSpacing="0.10"
+                android:text="TOQUE PARA INICIAR"
+                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                android:textColor="@color/fz_text_muted" />
+        </LinearLayout>
+    </FrameLayout>
+
     <LinearLayout
         android:id="@+id/phoneShell"
         android:layout_width="match_parent"
@@ -19,7 +63,8 @@
         android:paddingLeft="12dp"
         android:paddingTop="10dp"
         android:paddingRight="12dp"
-        android:paddingBottom="10dp">
+        android:paddingBottom="10dp"
+        android:visibility="gone">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/topPanel"
@@ -51,7 +96,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:letterSpacing="0.12"
-                        android:text="HELENA"
+                        android:text="ECO-0"
                         android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                         android:textColor="@color/fz_text" />
 
@@ -64,7 +109,7 @@
                         android:paddingTop="4dp"
                         android:paddingRight="10dp"
                         android:paddingBottom="4dp"
-                        android:text="03.17"
+                        android:text="INSTÁVEL"
                         android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
                         android:textColor="@color/fz_text" />
                 </LinearLayout>
@@ -74,7 +119,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="canal seguro / conversa interceptada"
+                    android:text="Sistema de Recuperação de Transmissões"
                     android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                     android:textColor="@color/fz_text_muted" />
             </LinearLayout>
@@ -87,31 +132,134 @@
             android:layout_marginTop="10dp"
             android:layout_weight="1">
 
+            <ScrollView
+                android:id="@+id/screenHome"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/homeHelenaCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardBackgroundColor="#B8120F0D"
+                        app:cardCornerRadius="10dp"
+                        app:strokeColor="@color/fz_line"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="14dp">
+
+                            <com.frequenciazero.HelenaAvatarView
+                                android:layout_width="54dp"
+                                android:layout_height="54dp" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="12dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="HELENA"
+                                    android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+                                    android:textColor="@color/fz_text" />
+
+                                <com.google.android.material.textview.MaterialTextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="online / conexão instável"
+                                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                                    android:textColor="@color/fz_mineral" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <GridLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:columnCount="2">
+
+                        <TextView android:id="@+id/homeMessages" style="@style/FzHomeCard" android:text="Mensagens\n3 novas" />
+                        <TextView android:id="@+id/homeFiles" style="@style/FzHomeCard" android:text="Arquivos\n2 não lidos" />
+                        <TextView android:id="@+id/homeCalls" style="@style/FzHomeCard" android:text="Chamadas\nbloqueada" />
+                        <TextView android:id="@+id/homeMap" style="@style/FzHomeCard" android:text="Mapa\nincompleto" />
+                    </GridLayout>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/homeLastTransmission"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        app:cardBackgroundColor="#B8120F0D"
+                        app:cardCornerRadius="10dp"
+                        app:strokeColor="@color/fz_line"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="14dp">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Última transmissão"
+                                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                                android:textColor="@color/fz_text_muted" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="VX_0317_A.raw     11:03"
+                                android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+                                android:textColor="@color/fz_text" />
+
+                            <com.frequenciazero.MiniWaveView
+                                android:layout_width="match_parent"
+                                android:layout_height="42dp"
+                                android:layout_marginTop="8dp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+            </ScrollView>
+
             <LinearLayout
                 android:id="@+id/screenMessages"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/conversationSignal"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    app:cardBackgroundColor="#B8120F0D"
-                    app:cardCornerRadius="8dp"
-                    app:strokeColor="@color/fz_line"
-                    app:strokeWidth="1dp">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp">
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:lineSpacingExtra="2dp"
-                        android:padding="12dp"
-                        android:text="CHAMADA RECUPERADA // ORIGEM PARCIAL // VERTICE"
-                        android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
-                        android:textColor="@color/fz_mineral" />
-                </com.google.android.material.card.MaterialCardView>
+                    <TextView android:id="@+id/backFromMessages" style="@style/FzBackButton" android:text="‹" />
+                    <com.frequenciazero.HelenaAvatarView android:layout_width="40dp" android:layout_height="40dp" />
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginLeft="10dp" android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="HELENA" android:textColor="@color/fz_text" android:textSize="14sp" />
+                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="online" android:textColor="@color/fz_mineral" android:textSize="11sp" />
+                    </LinearLayout>
+                    <TextView android:id="@+id/openCall" style="@style/FzBackButton" android:text="⋮" />
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/messageList"
@@ -127,39 +275,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="4dp"
-                    app:chipSpacingHorizontal="8dp"
+                    app:chipSpacingHorizontal="6dp"
                     app:singleLine="false">
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/responseConfirm"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Confirmado."
-                        android:textColor="@color/fz_text"
-                        app:chipBackgroundColor="@color/fz_panel"
-                        app:chipStrokeColor="@color/fz_ember"
-                        app:chipStrokeWidth="1dp" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/responseFrequency"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Que frequência?"
-                        android:textColor="@color/fz_text"
-                        app:chipBackgroundColor="@color/fz_panel"
-                        app:chipStrokeColor="@color/fz_line"
-                        app:chipStrokeWidth="1dp" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/responseMemory"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Por que eu esqueceria?"
-                        android:textColor="@color/fz_text"
-                        app:chipBackgroundColor="@color/fz_panel"
-                        app:chipStrokeColor="@color/fz_warning"
-                        app:chipStrokeWidth="1dp" />
+                    <com.google.android.material.chip.Chip android:id="@+id/responseConfirm" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Confirmado." android:textColor="@color/fz_text" app:chipBackgroundColor="@color/fz_panel" app:chipStrokeColor="@color/fz_ember" app:chipStrokeWidth="1dp" />
+                    <com.google.android.material.chip.Chip android:id="@+id/responseFrequency" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Que frequência?" android:textColor="@color/fz_text" app:chipBackgroundColor="@color/fz_panel" app:chipStrokeColor="@color/fz_line" app:chipStrokeWidth="1dp" />
+                    <com.google.android.material.chip.Chip android:id="@+id/responseMemory" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Por que eu esqueceria?" android:textColor="@color/fz_text" app:chipBackgroundColor="@color/fz_panel" app:chipStrokeColor="@color/fz_warning" app:chipStrokeWidth="1dp" />
+                    <com.google.android.material.chip.Chip android:id="@+id/responseProtocol" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Qual protocolo?" android:textColor="@color/fz_text" app:chipBackgroundColor="@color/fz_panel" app:chipStrokeColor="@color/fz_line" app:chipStrokeWidth="1dp" />
                 </com.google.android.material.chip.ChipGroup>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/settings_row_bg"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="14dp"
+                    android:text="Digite sua resposta...                                      ›"
+                    android:textColor="@color/fz_text_muted"
+                    android:textSize="13sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -169,21 +304,42 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:letterSpacing="0.08"
-                    android:text="ARQUIVOS RECEBIDOS"
-                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-                    android:textColor="@color/fz_ember" />
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                    <TextView android:id="@+id/backFromTransmissions" style="@style/FzBackButton" android:text="‹" />
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:letterSpacing="0.08" android:text="TRANSMISSÕES" android:textColor="@color/fz_text" android:textSize="14sp" />
+                    <TextView style="@style/FzBackButton" android:text="⋮" />
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:orientation="horizontal">
+                    <TextView style="@style/FzFilterChip" android:text="Todas" />
+                    <TextView style="@style/FzFilterChip" android:text="Novas" />
+                    <TextView style="@style/FzFilterChip" android:text="Interceptadas" />
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/transmissionList"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_marginTop="12dp"
+                    android:layout_weight="1"
                     android:clipToPadding="false" />
             </LinearLayout>
+
+            <ScrollView
+                android:id="@+id/screenFileDetail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                    <TextView android:id="@+id/backFromDetail" style="@style/FzBackButton" android:text="‹" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="VX_0317_A.raw" android:textColor="@color/fz_text" android:textSize="22sp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Vértice     11:03     • CORROMPIDO" android:textColor="@color/fz_warning" android:textSize="12sp" />
+                    <com.frequenciazero.FileCoverView android:layout_width="match_parent" android:layout_height="150dp" android:layout_marginTop="16dp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="18dp" android:text="INFORMAÇÕES\n\nTipo                                      Áudio\nOrigem                                  Vértice\nData                         17/03/20XX 23:17\nStatus                              Corrompido" android:textColor="@color/fz_text_muted" android:textSize="14sp" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/openRestoreButton" android:layout_width="match_parent" android:layout_height="54dp" android:layout_marginTop="22dp" android:text="Abrir na ferramenta" android:textAllCaps="false" app:backgroundTint="@color/fz_panel" app:cornerRadius="8dp" app:strokeColor="@color/fz_line" app:strokeWidth="1dp" />
+                </LinearLayout>
+            </ScrollView>
 
             <LinearLayout
                 android:id="@+id/screenRestore"
@@ -192,170 +348,71 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardBackgroundColor="#B8120F0D"
-                    app:cardCornerRadius="8dp"
-                    app:strokeColor="@color/fz_line"
-                    app:strokeWidth="1dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/restoreFileName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="VX_0317_A.raw"
-                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                            android:textColor="@color/fz_text" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/restoreStatus"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="ruído bruto / amostra bloqueada"
-                            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                            android:textColor="@color/fz_text_muted" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.frequenciazero.SpectrogramView
-                    android:id="@+id/spectrogramView"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="14dp"
-                    android:layout_weight="1" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/frequencyReadout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:gravity="center"
-                    android:text="02.84"
-                    android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
-                    android:textColor="@color/fz_text" />
-
-                <SeekBar
-                    android:id="@+id/frequencySlider"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:max="75"
-                    android:progress="14"
-                    android:progressBackgroundTint="@color/fz_line"
-                    android:progressTint="@color/fz_ember"
-                    android:thumbTint="@color/fz_ember" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/captureButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="54dp"
-                    android:layout_marginTop="8dp"
-                    android:enabled="false"
-                    android:text="Capturar Amostra"
-                    android:textAllCaps="false"
-                    android:textColor="@color/fz_ink"
-                    app:backgroundTint="@color/fz_ember"
-                    app:cornerRadius="8dp" />
+                <TextView android:id="@+id/backFromRestore" style="@style/FzBackButton" android:text="‹" />
+                <TextView android:id="@+id/restoreFileName" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="VX_0317_A.raw" android:textColor="@color/fz_text" android:textSize="20sp" />
+                <TextView android:id="@+id/restoreStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Origem: Vértice     SINAL FRACO" android:textColor="@color/fz_text_muted" android:textSize="12sp" />
+                <com.frequenciazero.SpectrogramView android:id="@+id/spectrogramView" android:layout_width="match_parent" android:layout_height="0dp" android:layout_marginTop="14dp" android:layout_weight="1" />
+                <TextView android:id="@+id/frequencyReadout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:gravity="center" android:text="02.84 MHz" android:textColor="@color/fz_mineral" android:textSize="34sp" />
+                <SeekBar android:id="@+id/frequencySlider" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:max="75" android:progress="14" android:progressBackgroundTint="@color/fz_line" android:progressTint="@color/fz_ember" android:thumbTint="@color/fz_ember" />
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:text="Gire o controle até a voz ficar mais nítida." android:textColor="@color/fz_text_muted" android:textSize="12sp" />
+                <com.google.android.material.button.MaterialButton android:id="@+id/captureButton" android:layout_width="match_parent" android:layout_height="54dp" android:layout_marginTop="10dp" android:enabled="false" android:text="Capturar amostra" android:textAllCaps="false" android:textColor="@color/fz_ink" app:backgroundTint="@color/fz_ember" app:cornerRadius="8dp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/screenLog"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/logList"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clipToPadding="false" />
+            <LinearLayout android:id="@+id/screenSuccess" android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical" android:visibility="gone">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:letterSpacing="0.08" android:text="AMOSTRA CAPTURADA" android:textColor="@color/fz_mineral" android:textSize="16sp" />
+                <com.frequenciazero.MiniWaveView android:layout_width="match_parent" android:layout_height="120dp" android:layout_marginTop="26dp" />
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:gravity="center" android:text="Voz parcial recuperada" android:textColor="@color/fz_text_muted" android:textSize="13sp" />
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:gravity="center" android:text="...você voltou..." android:textColor="@color/fz_mineral" android:textSize="26sp" />
+                <com.google.android.material.button.MaterialButton android:id="@+id/saveAndCloseButton" android:layout_width="match_parent" android:layout_height="54dp" android:layout_marginTop="52dp" android:text="Salvar e fechar" android:textAllCaps="false" app:backgroundTint="@color/fz_panel" app:cornerRadius="8dp" />
             </LinearLayout>
 
-            <ScrollView
-                android:id="@+id/screenMap"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone">
+            <LinearLayout android:id="@+id/screenLog" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:visibility="gone">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                    <TextView android:id="@+id/backFromLog" style="@style/FzBackButton" android:text="‹" />
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="REGISTRO TÉCNICO" android:textColor="@color/fz_text" android:textSize="14sp" />
+                    <TextView style="@style/FzBackButton" android:text="⌕" />
+                </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView android:id="@+id/logList" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:clipToPadding="false" />
+                <com.google.android.material.button.MaterialButton android:id="@+id/exportLogButton" android:layout_width="match_parent" android:layout_height="52dp" android:text="Exportar log" android:textAllCaps="false" app:backgroundTint="@color/fz_panel" app:cornerRadius="8dp" />
+            </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:letterSpacing="0.08"
-                        android:text="MAPA PASSIVO"
-                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-                        android:textColor="@color/fz_ember" />
-
-                    <com.frequenciazero.DeadZoneMapView
-                        android:id="@+id/deadZoneMap"
-                        android:layout_width="match_parent"
-                        android:layout_height="330dp"
-                        android:layout_marginTop="12dp" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/mapText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp"
-                        android:lineSpacingExtra="7dp"
-                        android:text="Cidade Vértice\nZona Morta\nAntena\nRádio Âncora"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                        android:textColor="@color/fz_text" />
+            <ScrollView android:id="@+id/screenMap" android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                    <TextView android:id="@+id/backFromMap" style="@style/FzBackButton" android:text="‹" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:text="MAPA" android:textColor="@color/fz_text" android:textSize="14sp" />
+                    <com.frequenciazero.DeadZoneMapView android:id="@+id/deadZoneMap" android:layout_width="match_parent" android:layout_height="360dp" android:layout_marginTop="12dp" />
+                    <TextView android:id="@+id/mapText" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:lineSpacingExtra="7dp" android:text="Mapeamento incompleto\nMais dados necessários" android:textColor="@color/fz_text_muted" android:textSize="14sp" />
                 </LinearLayout>
             </ScrollView>
 
-            <LinearLayout
-                android:id="@+id/screenSettings"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:visibility="gone">
+            <ScrollView android:id="@+id/screenSettings" android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                    <TextView android:id="@+id/backFromSettings" style="@style/FzBackButton" android:text="‹" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:text="CONFIGURAÇÕES" android:textColor="@color/fz_text" android:textSize="14sp" />
+                    <TextView style="@style/FzSectionTitle" android:text="GERAL" />
+                    <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/soundSwitch" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/settings_row_bg" android:checked="true" android:padding="14dp" android:text="Som ambiente" android:textColor="@color/fz_text" />
+                    <TextView style="@style/FzSettingsRow" android:text="Vibração                                      ligada" />
+                    <TextView style="@style/FzSettingsRow" android:text="Efeitos sonoros                         ligados" />
+                    <TextView style="@style/FzSettingsRow" android:text="Interface                                  Sistema" />
+                    <TextView style="@style/FzSectionTitle" android:text="DADOS" />
+                    <TextView style="@style/FzSettingsRow" android:text="Sincronizar dados                         ›" />
+                    <TextView style="@style/FzSettingsRow" android:text="Limpar cache                         2,4 MB" />
+                    <TextView style="@style/FzSectionTitle" android:text="SISTEMA" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/resetButton" android:layout_width="match_parent" android:layout_height="52dp" android:text="Redefinir progresso" android:textAllCaps="false" app:backgroundTint="@color/fz_panel" app:cornerRadius="8dp" app:strokeColor="@color/fz_warning" app:strokeWidth="1dp" />
+                </LinearLayout>
+            </ScrollView>
 
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/soundSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/settings_row_bg"
-                    android:padding="14dp"
-                    android:checked="true"
-                    android:text="Som"
-                    android:textColor="@color/fz_text" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/resetButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:layout_marginTop="16dp"
-                    android:text="Resetar progresso"
-                    android:textAllCaps="false"
-                    app:backgroundTint="@color/fz_panel"
-                    app:cornerRadius="8dp"
-                    app:strokeColor="@color/fz_warning"
-                    app:strokeWidth="1dp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/creditsText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:background="@drawable/settings_row_bg"
-                    android:padding="14dp"
-                    android:text="Frequência Zero\nCapítulo 1: Vértice\nUma investigação por sinais, memória e ruído."
-                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                    android:textColor="@color/fz_text_muted" />
+            <LinearLayout android:id="@+id/screenCall" android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical" android:visibility="gone">
+                <TextView android:id="@+id/backFromCall" style="@style/FzBackButton" android:text="‹" />
+                <com.frequenciazero.HelenaAvatarView android:layout_width="170dp" android:layout_height="170dp" />
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="18dp" android:gravity="center" android:text="CHAMADA RECEBIDA" android:textColor="@color/fz_text_muted" android:textSize="13sp" />
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:gravity="center" android:text="HELENA" android:textColor="@color/fz_text" android:textSize="22sp" />
+                <TextView android:id="@+id/callLine" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="28dp" android:gravity="center" android:lineSpacingExtra="5dp" android:text="Elias, tem coisas sobre Vértice\nque não estão nos arquivos." android:textColor="@color/fz_text" android:textSize="18sp" />
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="40dp" android:gravity="center" android:orientation="horizontal">
+                    <TextView android:id="@+id/declineCall" style="@style/FzCallButton" android:text="Recusar" />
+                    <TextView android:id="@+id/answerCall" style="@style/FzCallButton" android:text="Atender" />
+                    <TextView android:id="@+id/messageCall" style="@style/FzCallButton" android:text="Mensagem" />
+                </LinearLayout>
             </LinearLayout>
         </FrameLayout>
 
@@ -368,56 +425,12 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="5dp">
-
-            <TextView
-                android:id="@+id/navMessages"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="MSG"
-                android:textColor="@color/fz_text"
-                android:textSize="11sp" />
-
-            <TextView
-                android:id="@+id/navTransmissions"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="VX"
-                android:textColor="@color/fz_text_muted"
-                android:textSize="11sp" />
-
-            <TextView
-                android:id="@+id/navLog"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="LOG"
-                android:textColor="@color/fz_text_muted"
-                android:textSize="11sp" />
-
-            <TextView
-                android:id="@+id/navMap"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="MAP"
-                android:textColor="@color/fz_text_muted"
-                android:textSize="11sp" />
-
-            <TextView
-                android:id="@+id/navSettings"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="SYS"
-                android:textColor="@color/fz_text_muted"
-                android:textSize="11sp" />
+            <TextView android:id="@+id/navHome" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="ECO" android:textColor="@color/fz_text" android:textSize="11sp" />
+            <TextView android:id="@+id/navMessages" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="MSG" android:textColor="@color/fz_text_muted" android:textSize="11sp" />
+            <TextView android:id="@+id/navTransmissions" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="ARQ" android:textColor="@color/fz_text_muted" android:textSize="11sp" />
+            <TextView android:id="@+id/navLog" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="LOG" android:textColor="@color/fz_text_muted" android:textSize="11sp" />
+            <TextView android:id="@+id/navMap" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="MAP" android:textColor="@color/fz_text_muted" android:textSize="11sp" />
+            <TextView android:id="@+id/navSettings" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="SYS" android:textColor="@color/fz_text_muted" android:textSize="11sp" />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>
