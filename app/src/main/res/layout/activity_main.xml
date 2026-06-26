@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fz_black">
+
+    <FrameLayout
+        android:id="@+id/titleScreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.frequenciazero.TitleForestView
+            android:id="@+id/titleForest"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="28dp">
+
+            <TextView
+                android:id="@+id/titleLogo"
+                style="@style/FzTitleText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="8dp"
+                android:text="FREQUÊNCIA\nZERO"
+                android:textSize="38sp" />
+
+            <TextView
+                android:id="@+id/titleSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:gravity="center"
+                android:text="Nem todo silêncio é ausência."
+                android:textColor="@color/fz_text_secondary"
+                android:textSize="15sp" />
+
+            <Space
+                android:layout_width="1dp"
+                android:layout_height="180dp" />
+
+            <TextView
+                android:id="@+id/startPrompt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:letterSpacing="0.12"
+                android:text="TOQUE PARA INICIAR"
+                android:textColor="@color/fz_text"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/lockScreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <com.frequenciazero.LockScreenView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="24dp"
+            android:paddingTop="18dp"
+            android:paddingRight="24dp"
+            android:paddingBottom="32dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="SEM SERVIÇO"
+                    android:textColor="@color/fz_text_secondary"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="▮▮▯  61%"
+                    android:textColor="@color/fz_text_secondary"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/lockTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="70dp"
+                android:gravity="center"
+                android:text="23:17"
+                android:textColor="@color/fz_text"
+                android:textSize="56sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="17 MAR"
+                android:textColor="@color/fz_text_secondary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/notificationCard"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/fz_lock_notification_height"
+                android:layout_marginTop="42dp"
+                android:background="@drawable/bg_notification"
+                android:gravity="center_vertical"
+                android:lineSpacingExtra="5dp"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:text="HELENA\nElias, você está recebendo?"
+                android:textColor="@color/fz_text"
+                android:textSize="15sp"
+                android:visibility="invisible" />
+
+            <Space
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="toque na notificação"
+                android:textColor="@color/fz_text_secondary"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/chatScreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/fz_black"
+        android:visibility="gone">
+
+        <com.frequenciazero.LockScreenView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.45" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="12dp"
+            android:paddingTop="10dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="10dp">
+
+            <LinearLayout
+                android:id="@+id/chatHeader"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="36dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="‹"
+                    android:textColor="@color/fz_text"
+                    android:textSize="28sp" />
+
+                <com.frequenciazero.HelenaAvatarView
+                    android:layout_width="42dp"
+                    android:layout_height="42dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="HELENA"
+                        android:textColor="@color/fz_text"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/headerStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="online"
+                        android:textColor="@color/fz_teal"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="36dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="⋮"
+                    android:textColor="@color/fz_text_secondary"
+                    android:textSize="22sp" />
+            </LinearLayout>
+
+            <ScrollView
+                android:id="@+id/chatScroll"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipToPadding="false"
+                android:paddingTop="8dp"
+                android:paddingBottom="12dp">
+
+                <LinearLayout
+                    android:id="@+id/messageContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </ScrollView>
+
+            <TextView
+                android:id="@+id/typingIndicator"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:gravity="center_vertical"
+                android:text="HELENA digitando..."
+                android:textColor="@color/fz_text_secondary"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/choicePanel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/choiceConfirm"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/fz_option_height"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_choice"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="18dp"
+                    android:paddingRight="18dp"
+                    android:text="Confirmar recebimento"
+                    android:textColor="@color/fz_text"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/choiceWho"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/fz_option_height"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_choice"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="18dp"
+                    android:paddingRight="18dp"
+                    android:text="Quem é você?"
+                    android:textColor="@color/fz_text"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/choiceName"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/fz_option_height"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_choice"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="18dp"
+                    android:paddingRight="18dp"
+                    android:text="Como sabe meu nome?"
+                    android:textColor="@color/fz_text"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/inputHint"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_input_bar"
+                android:gravity="center_vertical"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:text="Digite sua resposta..."
+                android:textColor="@color/fz_text_secondary"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fileScreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/fz_black"
+        android:visibility="gone">
+
+        <com.frequenciazero.LockScreenView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.35" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="22dp">
+
+            <TextView
+                android:id="@+id/backFromFile"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:gravity="center"
+                android:text="‹"
+                android:textColor="@color/fz_text"
+                android:textSize="28sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="VX_0317_A.raw"
+                android:textColor="@color/fz_text"
+                android:textSize="24sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:lineSpacingExtra="4dp"
+                android:text="Origem desconhecida\nDuração: 00:11\nStatus: danificado"
+                android:textColor="@color/fz_text_secondary"
+                android:textSize="13sp" />
+
+            <com.frequenciazero.CorruptedFileArtView
+                android:id="@+id/fileArt"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="22dp"
+                android:layout_weight="1" />
+
+            <com.frequenciazero.MiniWaveView
+                android:id="@+id/waveView"
+                android:layout_width="match_parent"
+                android:layout_height="76dp"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:id="@+id/audioCaption"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:text="Áudio parcialmente corrompido."
+                android:textColor="@color/fz_text_secondary"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/playButton"
+                android:layout_width="76dp"
+                android:layout_height="76dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/bg_play_circle"
+                android:gravity="center"
+                android:text="▶"
+                android:textColor="@color/fz_black"
+                android:textSize="32sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:letterSpacing="0.10"
+                android:text="OUVIR"
+                android:textColor="@color/fz_text"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <View
+        android:id="@+id/glitchOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:background="@color/fz_text"
+        android:visibility="gone" />
+</FrameLayout>

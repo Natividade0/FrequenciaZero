@@ -1,3 +1,19 @@
 <resources>
-    <style name="Theme.FrequenciaZero" parent="Theme.Material3.DayNight.NoActionBar" />
+    <style name="Theme.FrequenciaZero" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:colorAccent">@color/fz_teal</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="colorPrimary">@color/fz_teal</item>
+        <item name="colorSecondary">@color/fz_amber</item>
+        <item name="colorSurface">@color/fz_panel</item>
+        <item name="colorOnSurface">@color/fz_text</item>
+    </style>
+
+    <style name="FzTitleText">
+        <item name="android:textColor">@color/fz_text</item>
+        <item name="android:gravity">center</item>
+        <item name="android:letterSpacing">0.18</item>
+    </style>
 </resources>
