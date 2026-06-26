@@ -175,14 +175,14 @@
                 android:id="@+id/frequencySlider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:valueFrom="2.70"
-                android:valueTo="3.45"
-                android:stepSize="0.01"
-                android:value="2.84"
                 app:haloColor="@color/fz_panel"
+                app:stepSize="0.01"
                 app:thumbColor="@color/fz_ember"
                 app:trackColorActive="@color/fz_ember"
-                app:trackColorInactive="@color/fz_line" />
+                app:trackColorInactive="@color/fz_line"
+                app:value="2.84"
+                app:valueFrom="2.70"
+                app:valueTo="3.45" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/captureButton"
@@ -287,7 +287,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/fz_surface"
-        app:itemActiveIndicatorStyle="@style/Widget.Material3.BottomNavigationView.ActiveIndicator"
         app:itemIconTint="@color/fz_text_muted"
         app:itemTextColor="@color/fz_text"
         app:labelVisibilityMode="labeled"
