@@ -1,22 +1,23 @@
 <resources>
-    <color name="fz_ink">#060607</color>
-    <color name="fz_surface">#11100F</color>
-    <color name="fz_surface_high">#1A1714</color>
-    <color name="fz_panel">#201B16</color>
-    <color name="fz_line">#3A3028</color>
-    <color name="fz_text">#F4EDE2</color>
-    <color name="fz_text_muted">#A99E90</color>
-    <color name="fz_ember">#D87432</color>
-    <color name="fz_mineral">#6F9B87</color>
-    <color name="fz_warning">#A7372D</color>
+    <color name="fz_ink">#050404</color>
+    <color name="fz_surface">#100D0B</color>
+    <color name="fz_surface_high">#1B1511</color>
+    <color name="fz_panel">#241B15</color>
+    <color name="fz_line">#46362B</color>
+    <color name="fz_text">#F7EEE3</color>
+    <color name="fz_text_muted">#B2A292</color>
+    <color name="fz_ember">#E06F2F</color>
+    <color name="fz_ember_dim">#7C3C24</color>
+    <color name="fz_mineral">#7FAF92</color>
+    <color name="fz_warning">#B63D32</color>
     <color name="fz_shadow">#020202</color>
 
-    <color name="c_primary">#6F9B87</color>
-    <color name="c_bg">#060607</color>
-    <color name="c_panel">#201B16</color>
-    <color name="c_alt">#1A1714</color>
-    <color name="c_gold">#D87432</color>
-    <color name="c_line">#3A3028</color>
-    <color name="c_text">#F4EDE2</color>
-    <color name="c_text2">#A99E90</color>
+    <color name="c_primary">#7FAF92</color>
+    <color name="c_bg">#050404</color>
+    <color name="c_panel">#241B15</color>
+    <color name="c_alt">#1B1511</color>
+    <color name="c_gold">#E06F2F</color>
+    <color name="c_line">#46362B</color>
+    <color name="c_text">#F7EEE3</color>
+    <color name="c_text2">#B2A292</color>
 </resources>
