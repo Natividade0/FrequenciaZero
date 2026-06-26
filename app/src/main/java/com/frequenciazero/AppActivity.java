@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -17,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.ChipGroup;
@@ -44,8 +44,12 @@ public class AppActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private AudioEngine audio;
 
+    private CinematicBackdropView cinematicBackdrop;
+    private LinearLayout phoneShell;
+    private MaterialCardView topPanel;
     private TextView screenTitle;
     private TextView screenSubtitle;
+    private TextView livePill;
     private LinearLayout screenMessages;
     private LinearLayout screenTransmissions;
     private LinearLayout screenRestore;
@@ -62,6 +66,11 @@ public class AppActivity extends AppCompatActivity {
     private SeekBar frequencySlider;
     private MaterialButton captureButton;
     private MaterialSwitch soundSwitch;
+    private TextView navMessages;
+    private TextView navTransmissions;
+    private TextView navLog;
+    private TextView navMap;
+    private TextView navSettings;
 
     private final ArrayList<Message> messages = new ArrayList<>();
     private final ArrayList<Transmission> transmissions = new ArrayList<>();
@@ -79,6 +88,7 @@ public class AppActivity extends AppCompatActivity {
     private int signalCuriosity;
     private int memoryResistance;
     private int lastLoggedFrequency = -1000;
+    private View currentScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,11 +107,12 @@ public class AppActivity extends AppCompatActivity {
         setupRestore();
         setupNavigation();
         setupSettings();
-        addLog("BOOT", "session opened / secure channel warm");
+        addLog("BOOT", "cinematic session opened / secure channel warm");
         renderConversation();
         renderTransmissions();
         renderLog();
         showMessages();
+        playOpeningAnimation();
     }
 
     @Override
@@ -111,8 +122,12 @@ public class AppActivity extends AppCompatActivity {
     }
 
     private void bindViews() {
+        cinematicBackdrop = findViewById(R.id.cinematicBackdrop);
+        phoneShell = findViewById(R.id.phoneShell);
+        topPanel = findViewById(R.id.topPanel);
         screenTitle = findViewById(R.id.screenTitle);
         screenSubtitle = findViewById(R.id.screenSubtitle);
+        livePill = findViewById(R.id.livePill);
         screenMessages = findViewById(R.id.screenMessages);
         screenTransmissions = findViewById(R.id.screenTransmissions);
         screenRestore = findViewById(R.id.screenRestore);
@@ -129,6 +144,11 @@ public class AppActivity extends AppCompatActivity {
         frequencySlider = findViewById(R.id.frequencySlider);
         captureButton = findViewById(R.id.captureButton);
         soundSwitch = findViewById(R.id.soundSwitch);
+        navMessages = findViewById(R.id.navMessages);
+        navTransmissions = findViewById(R.id.navTransmissions);
+        navLog = findViewById(R.id.navLog);
+        navMap = findViewById(R.id.navMap);
+        navSettings = findViewById(R.id.navSettings);
     }
 
     private void loadState() {
@@ -217,13 +237,8 @@ public class AppActivity extends AppCompatActivity {
                 saveState();
             }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
+            @Override public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override public void onStopTrackingTouch(SeekBar seekBar) { }
         });
         captureButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,27 +253,11 @@ public class AppActivity extends AppCompatActivity {
     }
 
     private void setupNavigation() {
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
-        bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_messages) {
-                showMessages();
-                return true;
-            } else if (id == R.id.nav_transmissions) {
-                showTransmissions();
-                return true;
-            } else if (id == R.id.nav_log) {
-                showLog();
-                return true;
-            } else if (id == R.id.nav_map) {
-                showMap();
-                return true;
-            } else if (id == R.id.nav_settings) {
-                showSettings();
-                return true;
-            }
-            return false;
-        });
+        navMessages.setOnClickListener(new View.OnClickListener() { @Override public void onClick(View view) { showMessages(); } });
+        navTransmissions.setOnClickListener(new View.OnClickListener() { @Override public void onClick(View view) { showTransmissions(); } });
+        navLog.setOnClickListener(new View.OnClickListener() { @Override public void onClick(View view) { showLog(); } });
+        navMap.setOnClickListener(new View.OnClickListener() { @Override public void onClick(View view) { showMap(); } });
+        navSettings.setOnClickListener(new View.OnClickListener() { @Override public void onClick(View view) { showSettings(); } });
     }
 
     private void setupSettings() {
@@ -287,6 +286,7 @@ public class AppActivity extends AppCompatActivity {
         addLog("MSG_TX", text + " / hidden state updated");
         saveState();
         renderConversation();
+        responseGroup.animate().alpha(0f).setDuration(180).start();
     }
 
     private void renderConversation() {
@@ -302,6 +302,7 @@ public class AppActivity extends AppCompatActivity {
             messages.add(new Message("HELENA", "A transmissão foi isolada. Restaure a amostra, não execute o bruto.", false));
         }
         responseGroup.setVisibility(responded ? View.GONE : View.VISIBLE);
+        responseGroup.setAlpha(1f);
         messageAdapter.notifyDataSetChanged();
         if (!messages.isEmpty()) messageList.scrollToPosition(messages.size() - 1);
     }
@@ -335,6 +336,9 @@ public class AppActivity extends AppCompatActivity {
                 nearLogged = true;
                 addLog("FREQ", "03.17 stabilized / carrier visible");
                 audio.playNoise();
+                captureButton.animate().scaleX(1.03f).scaleY(1.03f).setDuration(140).withEndAction(new Runnable() {
+                    @Override public void run() { captureButton.animate().scaleX(1f).scaleY(1f).setDuration(140).start(); }
+                }).start();
             }
         } else {
             restoreStatus.setText("ruído bruto / procure a portadora 03.17");
@@ -394,51 +398,87 @@ public class AppActivity extends AppCompatActivity {
     }
 
     private void showMessages() {
-        showOnly(screenMessages);
         screenTitle.setText("HELENA");
         screenSubtitle.setText("canal seguro / conversa interceptada");
+        showOnly(screenMessages, 0, navMessages);
     }
 
     private void showTransmissions() {
-        showOnly(screenTransmissions);
         screenTitle.setText("TRANSMISSÕES");
         screenSubtitle.setText("arquivos recebidos / bruto bloqueado");
         addLog("TRANS", "list viewed");
+        showOnly(screenTransmissions, 1, navTransmissions);
     }
 
     private void showRestore() {
-        showOnly(screenRestore);
         screenTitle.setText("RESTAURAÇÃO");
         screenSubtitle.setText("VX_0317_A.raw / espectrograma ativo");
         updateRestore(false);
+        showOnly(screenRestore, 2, navTransmissions);
     }
 
     private void showLog() {
-        showOnly(screenLog);
         screenTitle.setText("LOG");
         screenSubtitle.setText("registro técnico automático");
+        showOnly(screenLog, 3, navLog);
     }
 
     private void showMap() {
-        showOnly(screenMap);
         screenTitle.setText("MAPA");
         screenSubtitle.setText("Vértice / exploração bloqueada");
         addLog("MAP", "passive map opened");
+        showOnly(screenMap, 4, navMap);
     }
 
     private void showSettings() {
-        showOnly(screenSettings);
         screenTitle.setText("CONFIGURAÇÕES");
         screenSubtitle.setText("som / progresso / créditos");
+        showOnly(screenSettings, 5, navSettings);
     }
 
-    private void showOnly(View active) {
-        screenMessages.setVisibility(active == screenMessages ? View.VISIBLE : View.GONE);
-        screenTransmissions.setVisibility(active == screenTransmissions ? View.VISIBLE : View.GONE);
-        screenRestore.setVisibility(active == screenRestore ? View.VISIBLE : View.GONE);
-        screenLog.setVisibility(active == screenLog ? View.VISIBLE : View.GONE);
-        screenMap.setVisibility(active == screenMap ? View.VISIBLE : View.GONE);
-        screenSettings.setVisibility(active == screenSettings ? View.VISIBLE : View.GONE);
+    private void showOnly(View active, int mode, TextView selectedNav) {
+        cinematicBackdrop.setMode(mode);
+        selectNav(selectedNav);
+        View[] screens = {screenMessages, screenTransmissions, screenRestore, screenLog, screenMap, screenSettings};
+        for (View screen : screens) {
+            if (screen == active) {
+                screen.setVisibility(View.VISIBLE);
+                if (currentScreen != active) {
+                    screen.setAlpha(0f);
+                    screen.setTranslationY(dp(screen, 12));
+                    screen.animate().alpha(1f).translationY(0f).setDuration(260)
+                            .setInterpolator(new DecelerateInterpolator()).start();
+                }
+            } else {
+                screen.setVisibility(View.GONE);
+            }
+        }
+        currentScreen = active;
+    }
+
+    private void selectNav(TextView selected) {
+        TextView[] navs = {navMessages, navTransmissions, navLog, navMap, navSettings};
+        for (TextView nav : navs) {
+            boolean active = nav == selected;
+            nav.setTextColor(active ? Color.rgb(5, 4, 4) : Color.rgb(178, 162, 146));
+            nav.setTypeface(Typeface.DEFAULT, active ? Typeface.BOLD : Typeface.NORMAL);
+            nav.setBackground(active ? bg(Color.rgb(224, 111, 47), Color.rgb(224, 111, 47), 8f, nav.getResources().getDisplayMetrics().density) : null);
+        }
+        selected.setScaleX(0.95f);
+        selected.setScaleY(0.95f);
+        selected.animate().scaleX(1f).scaleY(1f).setDuration(160).start();
+    }
+
+    private void playOpeningAnimation() {
+        phoneShell.setAlpha(0f);
+        phoneShell.setTranslationY(dp(phoneShell, 18));
+        topPanel.setTranslationY(-dp(topPanel, 10));
+        phoneShell.animate().alpha(1f).translationY(0f).setDuration(460)
+                .setInterpolator(new DecelerateInterpolator()).start();
+        topPanel.animate().translationY(0f).setDuration(520).setStartDelay(90)
+                .setInterpolator(new DecelerateInterpolator()).start();
+        livePill.setAlpha(0.35f);
+        livePill.animate().alpha(1f).setDuration(700).setStartDelay(220).start();
     }
 
     private static int dp(View view, int value) {
@@ -508,9 +548,12 @@ public class AppActivity extends AppCompatActivity {
             LinearLayout row = (LinearLayout) holder.itemView;
             row.setGravity(message.player ? Gravity.END : Gravity.START);
             holder.bubble.setText(message.player ? message.text : message.speaker + "\n" + message.text);
-            holder.bubble.setTextColor(message.player ? Color.rgb(6, 6, 7) : Color.rgb(244, 237, 226));
+            holder.bubble.setTextColor(message.player ? Color.rgb(5, 4, 4) : Color.rgb(247, 238, 227));
             float density = holder.bubble.getResources().getDisplayMetrics().density;
-            holder.bubble.setBackground(bg(message.player ? Color.rgb(216, 116, 50) : Color.rgb(26, 23, 20), message.player ? Color.rgb(216, 116, 50) : Color.rgb(58, 48, 40), 18f, density));
+            holder.bubble.setBackground(bg(message.player ? Color.rgb(224, 111, 47) : Color.rgb(27, 21, 17), message.player ? Color.rgb(224, 111, 47) : Color.rgb(70, 54, 43), 18f, density));
+            holder.itemView.setAlpha(0f);
+            holder.itemView.setTranslationY(dp(holder.itemView, 8));
+            holder.itemView.animate().alpha(1f).translationY(0f).setStartDelay(Math.min(260, position * 45L)).setDuration(220).start();
         }
 
         @Override
@@ -538,18 +581,18 @@ public class AppActivity extends AppCompatActivity {
             cardParams.setMargins(0, 0, 0, dp(card, 12));
             card.setLayoutParams(cardParams);
             card.setRadius(dp(card, 8));
-            card.setCardBackgroundColor(Color.rgb(26, 23, 20));
-            card.setStrokeColor(Color.rgb(58, 48, 40));
+            card.setCardBackgroundColor(Color.rgb(27, 21, 17));
+            card.setStrokeColor(Color.rgb(124, 60, 36));
             card.setStrokeWidth(dp(card, 1));
             card.setClickable(true);
             card.setFocusable(true);
             LinearLayout box = new LinearLayout(parent.getContext());
             box.setOrientation(LinearLayout.VERTICAL);
             box.setPadding(dp(card, 16), dp(card, 14), dp(card, 16), dp(card, 14));
-            TextView name = rowText(parent, 18f, Color.rgb(244, 237, 226), true);
-            TextView origin = rowText(parent, 13f, Color.rgb(169, 158, 144), false);
-            TextView duration = rowText(parent, 13f, Color.rgb(169, 158, 144), false);
-            TextView status = rowText(parent, 13f, Color.rgb(111, 155, 135), false);
+            TextView name = rowText(parent, 20f, Color.rgb(247, 238, 227), true);
+            TextView origin = rowText(parent, 13f, Color.rgb(178, 162, 146), false);
+            TextView duration = rowText(parent, 13f, Color.rgb(178, 162, 146), false);
+            TextView status = rowText(parent, 13f, Color.rgb(127, 175, 146), false);
             box.addView(name); box.addView(origin); box.addView(duration); box.addView(status); card.addView(box);
             return new Holder(card, name, origin, duration, status);
         }
@@ -562,6 +605,9 @@ public class AppActivity extends AppCompatActivity {
             holder.duration.setText(item.duration);
             holder.status.setText(item.status);
             holder.itemView.setOnClickListener(new View.OnClickListener() { @Override public void onClick(View view) { listener.onOpen(item); } });
+            holder.itemView.setAlpha(0f);
+            holder.itemView.setTranslationY(dp(holder.itemView, 10));
+            holder.itemView.animate().alpha(1f).translationY(0f).setDuration(260).start();
         }
 
         @Override
@@ -587,7 +633,7 @@ public class AppActivity extends AppCompatActivity {
         LogAdapter(List<String> items) { this.items = items; }
         @NonNull @Override public Holder onCreateViewHolder(@NonNull android.view.ViewGroup parent, int viewType) {
             TextView text = new TextView(parent.getContext());
-            text.setTextColor(Color.rgb(169, 158, 144));
+            text.setTextColor(Color.rgb(178, 162, 146));
             text.setTextSize(12f);
             text.setTypeface(Typeface.MONOSPACE);
             text.setPadding(0, dp(text, 6), 0, dp(text, 6));
