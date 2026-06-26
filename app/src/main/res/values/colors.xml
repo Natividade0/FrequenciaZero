@@ -1,0 +1,10 @@
+<resources>
+    <color name="c_primary">#1F6F5B</color>
+    <color name="c_bg">#071112</color>
+    <color name="c_panel">#0D1A1C</color>
+    <color name="c_alt">#102022</color>
+    <color name="c_gold">#D8A23A</color>
+    <color name="c_line">#294246</color>
+    <color name="c_text">#F1EDE2</color>
+    <color name="c_text2">#9CAAA7</color>
+</resources>
