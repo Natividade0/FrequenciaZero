@@ -9,7 +9,7 @@
         android:theme="@style/Theme.FrequenciaZero">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".AppActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
