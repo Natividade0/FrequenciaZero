@@ -5,102 +5,57 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/c_bg"
-    android:padding="@dimen/s16">
+    android:background="#020509">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/title"
+    <com.frequenciazero.HouseSceneView
+        android:id="@+id/houseScene"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="VERTICE"
-        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-        android:textColor="@color/c_text"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomPanel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/fileName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/s8"
-        android:text="ENTRADA NORTE"
-        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-        android:textColor="@color/c_gold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/energy"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/s8"
-        android:text="Energia: 100%"
-        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-        android:textColor="@color/c_text2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fileName" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/status"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/s8"
-        android:text="Sinal: ausente"
-        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-        android:textColor="@color/c_text2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/energy" />
-
-    <com.frequenciazero.VanSceneView
-        android:id="@+id/consoleView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/s16"
-        app:layout_constraintBottom_toTopOf="@id/bottomPanel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/status" />
-
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:id="@+id/bottomPanel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/s16"
-        app:cardBackgroundColor="@color/c_panel"
-        app:cardCornerRadius="@dimen/r16"
+        android:background="#D9080B10"
+        android:orientation="vertical"
+        android:paddingLeft="18dp"
+        android:paddingTop="12dp"
+        android:paddingRight="18dp"
+        android:paddingBottom="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:strokeColor="@color/c_line"
-        app:strokeWidth="1dp">
+        app:layout_constraintStart_toStartOf="parent">
 
-        <LinearLayout
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/narrativeText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/s16">
+            android:lineSpacingExtra="2dp"
+            android:text="Vértice não aparece no mapa desde a evacuação."
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            android:textColor="#F1EDE2" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/feedback"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Toque para ligar o painel."
-                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                android:textColor="@color/c_text" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/frequencyText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:text="RADIO: --.--"
+            android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+            android:textColor="#88AFC7" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/logView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/s8"
-                android:maxLines="4"
-                android:text="Nenhum registro."
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                android:textColor="@color/c_text2" />
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/techLog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:maxLines="3"
+            android:text="LOG: casa fria / sem rede"
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+            android:textColor="#8D969A" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
