@@ -1,10 +1,23 @@
 <resources>
-    <color name="c_primary">#1F6F5B</color>
-    <color name="c_bg">#071112</color>
-    <color name="c_panel">#0D1A1C</color>
-    <color name="c_alt">#102022</color>
-    <color name="c_gold">#D8A23A</color>
-    <color name="c_line">#294246</color>
-    <color name="c_text">#F1EDE2</color>
-    <color name="c_text2">#9CAAA7</color>
+    <color name="fz_ink">#050404</color>
+    <color name="fz_surface">#100D0B</color>
+    <color name="fz_surface_high">#1B1511</color>
+    <color name="fz_panel">#241B15</color>
+    <color name="fz_line">#46362B</color>
+    <color name="fz_text">#F7EEE3</color>
+    <color name="fz_text_muted">#B2A292</color>
+    <color name="fz_ember">#E06F2F</color>
+    <color name="fz_ember_dim">#7C3C24</color>
+    <color name="fz_mineral">#7FAF92</color>
+    <color name="fz_warning">#B63D32</color>
+    <color name="fz_shadow">#020202</color>
+
+    <color name="c_primary">#7FAF92</color>
+    <color name="c_bg">#050404</color>
+    <color name="c_panel">#241B15</color>
+    <color name="c_alt">#1B1511</color>
+    <color name="c_gold">#E06F2F</color>
+    <color name="c_line">#46362B</color>
+    <color name="c_text">#F7EEE3</color>
+    <color name="c_text2">#B2A292</color>
 </resources>
