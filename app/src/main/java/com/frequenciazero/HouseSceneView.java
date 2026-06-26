@@ -6,15 +6,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Shader;
-import android.media.AudioFormat;
 import android.media.AudioManager;
-import android.media.AudioTrack;
 import android.media.ToneGenerator;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SoundEffectConstants;
@@ -24,34 +19,16 @@ import android.widget.TextView;
 import java.util.Locale;
 
 public class HouseSceneView extends View {
-    private static final String PREFS = "chapter_one_house";
-    private static final String KEY_RADIO = "radio_inspected";
-    private static final String KEY_CAPTURED = "signal_captured";
-    private static final String KEY_FREQ = "approx_frequency";
-    private static final String KEY_LOG = "technical_log";
-
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final RectF kitchenRect = new RectF();
-    private final RectF windowRect = new RectF();
-    private final RectF lampRect = new RectF();
     private final RectF radioRect = new RectF();
-    private final RectF dialRect = new RectF();
-    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final RectF windowRect = new RectF();
+    private final RectF kitchenRect = new RectF();
+    private final RectF lampRect = new RectF();
     private final SharedPreferences prefs;
     private ToneGenerator tone;
-
-    private TextView narrativeText;
-    private TextView frequencyText;
-    private TextView techLog;
-    private boolean radioInspected;
-    private boolean signalCaptured;
-    private boolean tuning;
-    private boolean dragging;
-    private float downX;
-    private float downY;
     private float frequency = 2.84f;
-    private long lastGlitchAt;
-    private String log;
+    private boolean tuning;
+    private boolean captured;
 
     public HouseSceneView(Context context) {
         this(context, null);
@@ -59,13 +36,10 @@ public class HouseSceneView extends View {
 
     public HouseSceneView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setFocusable(true);
         setSoundEffectsEnabled(true);
-        prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-        radioInspected = prefs.getBoolean(KEY_RADIO, false);
-        signalCaptured = prefs.getBoolean(KEY_CAPTURED, false);
-        frequency = prefs.getFloat(KEY_FREQ, 2.84f);
-        log = prefs.getString(KEY_LOG, "LOG: casa fria / sem rede");
+        prefs = context.getSharedPreferences("chapter_one_house", Context.MODE_PRIVATE);
+        frequency = prefs.getFloat("freq", 2.84f);
+        captured = prefs.getBoolean("captured", false);
         try {
             tone = new ToneGenerator(AudioManager.STREAM_MUSIC, 45);
         } catch (RuntimeException ignored) {
@@ -76,16 +50,11 @@ public class HouseSceneView extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        narrativeText = getRootView().findViewById(R.id.narrativeText);
-        frequencyText = getRootView().findViewById(R.id.frequencyText);
-        techLog = getRootView().findViewById(R.id.techLog);
-        if (signalCaptured) {
-            show("O rádio não estava ligado na tomada.");
+        if (captured) {
+            setPanel("O rádio não estava ligado na tomada.", "AMOSTRA: 03.17", prefs.getString("log", "03:17 — amostra local capturada"));
         } else {
-            show("Vértice não aparece no mapa desde a evacuação.");
+            setPanel("Vértice não aparece no mapa desde a evacuação.", "RADIO: --.--", prefs.getString("log", "LOG: casa fria / sem rede"));
         }
-        updateFrequencyText();
-        updateLog(log);
     }
 
     @Override
@@ -94,70 +63,42 @@ public class HouseSceneView extends View {
             tone.release();
             tone = null;
         }
-        handler.removeCallbacksAndMessages(null);
         super.onDetachedFromWindow();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
         float w = getWidth();
         float h = getHeight();
-        updateHotspots(w, h);
-        drawRoom(canvas, w, h);
-        drawColdWindow(canvas);
+        radioRect.set(w * 0.40f, h * 0.54f, w * 0.78f, h * 0.80f);
+        windowRect.set(w * 0.08f, h * 0.12f, w * 0.42f, h * 0.43f);
+        kitchenRect.set(w * 0.07f, h * 0.49f, w * 0.35f, h * 0.80f);
+        lampRect.set(w * 0.76f, h * 0.17f, w * 0.93f, h * 0.43f);
+        drawBackground(canvas, w, h);
+        drawWindow(canvas);
         drawKitchen(canvas);
-        drawRedLamp(canvas);
+        drawLamp(canvas);
         drawRadio(canvas);
         drawSignal(canvas, w, h);
         drawDust(canvas, w, h);
     }
 
-    private void updateHotspots(float w, float h) {
-        kitchenRect.set(w * 0.08f, h * 0.48f, w * 0.38f, h * 0.78f);
-        windowRect.set(w * 0.08f, h * 0.12f, w * 0.43f, h * 0.44f);
-        lampRect.set(w * 0.73f, h * 0.15f, w * 0.94f, h * 0.45f);
-        radioRect.set(w * 0.39f, h * 0.52f, w * 0.77f, h * 0.79f);
-        dialRect.set(radioRect.left + 34, radioRect.bottom - 58, radioRect.right - 34, radioRect.bottom - 24);
-    }
-
-    private void drawRoom(Canvas canvas, float w, float h) {
+    private void drawBackground(Canvas canvas, float w, float h) {
         paint.setShader(new LinearGradient(0, 0, w, h, Color.rgb(5, 14, 22), Color.rgb(2, 4, 7), Shader.TileMode.CLAMP));
+        paint.setStyle(Paint.Style.FILL);
         canvas.drawRect(0, 0, w, h, paint);
         paint.setShader(null);
-
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.rgb(8, 9, 12));
-        Path floor = new Path();
-        floor.moveTo(0, h * 0.64f);
-        floor.lineTo(w, h * 0.58f);
-        floor.lineTo(w, h);
-        floor.lineTo(0, h);
-        floor.close();
-        canvas.drawPath(floor, paint);
-
+        paint.setColor(Color.rgb(7, 8, 10));
+        canvas.drawRect(0, h * 0.64f, w, h, paint);
         paint.setColor(Color.rgb(12, 15, 18));
-        canvas.drawRect(w * 0.45f, h * 0.30f, w * 0.82f, h * 0.80f, paint);
-        paint.setColor(Color.rgb(19, 21, 24));
-        canvas.drawRect(w * 0.49f, h * 0.35f, w * 0.78f, h * 0.80f, paint);
+        canvas.drawRect(w * 0.48f, h * 0.30f, w * 0.83f, h * 0.83f, paint);
         paint.setColor(Color.rgb(4, 5, 7));
-        canvas.drawRect(w * 0.56f, h * 0.41f, w * 0.64f, h * 0.80f, paint);
-
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(2f);
-        paint.setColor(Color.rgb(30, 35, 39));
-        for (int i = 0; i < 7; i++) {
-            float y = h * (0.68f + i * 0.045f);
-            canvas.drawLine(0, y, w, y - h * 0.08f, paint);
-        }
+        canvas.drawRect(w * 0.58f, h * 0.39f, w * 0.65f, h * 0.83f, paint);
     }
 
-    private void drawColdWindow(Canvas canvas) {
+    private void drawWindow(Canvas canvas) {
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.rgb(6, 19, 30));
-        canvas.drawRect(windowRect, paint);
-        paint.setShader(new LinearGradient(windowRect.left, windowRect.top, windowRect.right, windowRect.bottom,
-                Color.argb(170, 82, 151, 185), Color.argb(10, 25, 42, 56), Shader.TileMode.CLAMP));
+        paint.setShader(new LinearGradient(windowRect.left, windowRect.top, windowRect.right, windowRect.bottom, Color.argb(170, 82, 151, 185), Color.argb(15, 15, 25, 35), Shader.TileMode.CLAMP));
         canvas.drawRect(windowRect, paint);
         paint.setShader(null);
         paint.setStyle(Paint.Style.STROKE);
@@ -170,68 +111,54 @@ public class HouseSceneView extends View {
 
     private void drawKitchen(Canvas canvas) {
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.rgb(13, 13, 14));
+        paint.setColor(Color.rgb(15, 15, 16));
         canvas.drawRect(kitchenRect, paint);
-        paint.setColor(Color.rgb(24, 24, 24));
-        canvas.drawRect(kitchenRect.left + 14, kitchenRect.top + 22, kitchenRect.right - 18, kitchenRect.bottom - 16, paint);
-        paint.setColor(Color.rgb(54, 55, 55));
+        paint.setColor(Color.rgb(45, 45, 45));
         for (int i = 0; i < 3; i++) {
-            float y = kitchenRect.top + 54 + i * 46;
-            canvas.drawOval(kitchenRect.left + 48, y, kitchenRect.right - 50, y + 16, paint);
+            float y = kitchenRect.top + 45 + i * 44;
+            canvas.drawOval(kitchenRect.left + 45, y, kitchenRect.right - 42, y + 15, paint);
         }
-        paint.setColor(Color.rgb(8, 8, 9));
-        canvas.drawRect(kitchenRect.left + 20, kitchenRect.bottom - 64, kitchenRect.right - 20, kitchenRect.bottom - 22, paint);
+        paint.setColor(Color.rgb(7, 7, 8));
+        canvas.drawRect(kitchenRect.left + 16, kitchenRect.bottom - 58, kitchenRect.right - 16, kitchenRect.bottom - 18, paint);
     }
 
-    private void drawRedLamp(Canvas canvas) {
+    private void drawLamp(Canvas canvas) {
         float pulse = (float) (0.55f + Math.sin(System.currentTimeMillis() * 0.006) * 0.25f);
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.argb((int) (80 + pulse * 110), 120, 18, 25));
         canvas.drawCircle(lampRect.centerX(), lampRect.centerY(), lampRect.width() * 0.9f, paint);
-        paint.setColor(Color.rgb(120, 22, 26));
+        paint.setColor(Color.rgb(125, 22, 28));
         canvas.drawCircle(lampRect.centerX(), lampRect.centerY(), lampRect.width() * 0.18f, paint);
-        postInvalidateDelayed(80);
+        postInvalidateDelayed(90);
     }
 
     private void drawRadio(Canvas canvas) {
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.rgb(11, 10, 10));
-        canvas.drawRoundRect(radioRect, 10, 10, paint);
+        canvas.drawRoundRect(radioRect, 12, 12, paint);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(3f);
-        paint.setColor(radioInspected ? Color.rgb(112, 31, 35) : Color.rgb(47, 50, 52));
-        canvas.drawRoundRect(radioRect, 10, 10, paint);
-
+        paint.setColor(tuning || captured ? Color.rgb(112, 31, 35) : Color.rgb(47, 50, 52));
+        canvas.drawRoundRect(radioRect, 12, 12, paint);
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.rgb(20, 22, 23));
         canvas.drawRect(radioRect.left + 26, radioRect.top + 26, radioRect.right - 26, radioRect.top + 70, paint);
-        paint.setColor(isTuned() ? Color.rgb(177, 206, 214) : Color.rgb(82, 99, 105));
+        paint.setColor(isTuned() ? Color.rgb(210, 226, 230) : Color.rgb(82, 99, 105));
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(28f);
         canvas.drawText(String.format(Locale.US, "%.2f", frequency), radioRect.centerX(), radioRect.top + 57, paint);
-
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(5f);
-        paint.setColor(Color.rgb(75, 79, 82));
-        canvas.drawLine(dialRect.left, dialRect.centerY(), dialRect.right, dialRect.centerY(), paint);
-        float dialX = dialRect.left + ((frequency - 2.70f) / 0.75f) * dialRect.width();
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(isTuned() ? Color.rgb(210, 226, 230) : Color.rgb(108, 30, 34));
-        canvas.drawCircle(dialX, dialRect.centerY(), 13f, paint);
-
-        paint.setColor(Color.rgb(21, 21, 22));
-        canvas.drawCircle(radioRect.right - 46, radioRect.top + 106, 24f, paint);
         paint.setColor(Color.rgb(35, 35, 35));
-        canvas.drawCircle(radioRect.left + 46, radioRect.top + 106, 22f, paint);
+        canvas.drawCircle(radioRect.left + 48, radioRect.top + 108, 22f, paint);
+        canvas.drawCircle(radioRect.right - 48, radioRect.top + 108, 24f, paint);
     }
 
     private void drawSignal(Canvas canvas, float w, float h) {
-        if (!tuning && !signalCaptured) return;
-        float amp = isTuned() ? 13f : 31f;
+        if (!tuning && !captured) return;
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(isTuned() ? 4f : 2f);
         paint.setColor(isTuned() ? Color.rgb(178, 217, 224) : Color.rgb(94, 34, 42));
         float mid = h * 0.46f;
+        float amp = isTuned() ? 12f : 30f;
         for (int i = 0; i < 46; i++) {
             float x1 = w * 0.16f + i * (w * 0.68f) / 46f;
             float x2 = w * 0.16f + (i + 1) * (w * 0.68f) / 46f;
@@ -253,27 +180,18 @@ public class HouseSceneView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            downX = event.getX();
-            downY = event.getY();
-            dragging = false;
-            return true;
-        }
-        if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            if (tuning || radioRect.contains(downX, downY)) {
-                dragging = true;
-                tuning = true;
-                updateFrequency(event.getX());
-                if (isTuned()) {
-                    show("O sinal estabilizou em 03.17.");
-                    playGlitchNearSignal();
-                } else {
-                    show("Arraste devagar. Tem algo por baixo do ruído.");
-                }
-                saveState();
-                invalidate();
-                return true;
+        if (event.getAction() == MotionEvent.ACTION_MOVE && tuning && !captured) {
+            float ratio = Math.max(0f, Math.min(1f, event.getX() / Math.max(1f, getWidth())));
+            frequency = 2.70f + ratio * 0.75f;
+            if (isTuned()) {
+                setPanel("O sinal estabilizou em 03.17.", "SINTONIA: 03.17", "03:17 — portadora encontrada");
+                playTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 80);
+            } else {
+                setPanel("Arraste devagar. Tem algo por baixo do ruído.", "SINTONIA: " + String.format(Locale.US, "%.2f", frequency), "LOG: sintonia manual");
             }
+            save();
+            invalidate();
+            return true;
         }
         if (event.getAction() == MotionEvent.ACTION_UP) {
             handleTap(event.getX(), event.getY());
@@ -284,139 +202,61 @@ public class HouseSceneView extends View {
     }
 
     private void handleTap(float x, float y) {
-        if (tuning && !dragging && isTuned() && !signalCaptured) {
-            captureSignal();
-            return;
-        }
+        playSoundEffect(SoundEffectConstants.CLICK);
         if (radioRect.contains(x, y)) {
-            radioInspected = true;
-            tuning = true;
-            show("O rádio responde antes do botão encostar.");
-            updateLog("LOG: radio inspecionado / portadora baixa");
-            playRadioBeep();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (tuning && !signalCaptured) show("Arraste devagar. Tem algo por baixo do ruído.");
-                }
-            }, 900);
-        } else if (kitchenRect.contains(x, y)) {
-            show("Tudo ficou no lugar. Até os pratos.");
-            updateLog("LOG: cozinha intacta / poeira interrompida");
-            playDryClick();
-        } else if (windowRect.contains(x, y)) {
-            show("Lá fora, nenhuma luz. Nenhum cachorro. Nenhum vento.");
-            updateLog("LOG: exterior sem movimento");
-            playDryClick();
-        } else if (lampRect.contains(x, y)) {
-            show("A lâmpada pulsa no mesmo ritmo do chiado.");
-            updateLog("LOG: pulso vermelho sincronizado");
-            playGlitch();
-        } else if (tuning && !dragging && isTuned() && signalCaptured) {
-            show("O rádio não estava ligado na tomada.");
-            playDryClick();
-        } else {
-            playDryClick();
-        }
-        saveState();
-    }
-
-    private void updateFrequency(float x) {
-        float clamped = Math.max(dialRect.left, Math.min(dialRect.right, x));
-        float amount = (clamped - dialRect.left) / Math.max(1f, dialRect.width());
-        frequency = 2.70f + amount * 0.75f;
-        updateFrequencyText();
-        updateLog(isTuned() ? "LOG: freq 03.17 / sinal estavel" : "LOG: varredura " + String.format(Locale.US, "%.2f", frequency));
-    }
-
-    private void captureSignal() {
-        signalCaptured = true;
-        tuning = false;
-        frequency = 3.17f;
-        updateFrequencyText();
-        show("...você voltou...");
-        updateLog("LOG: amostra capturada / origem interna");
-        playCaptureSound();
-        saveState();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                show("O rádio não estava ligado na tomada.");
-                updateLog("LOG: radio sem tomada / sinal persistente");
-                saveState();
+            if (isTuned() && tuning && !captured) {
+                captured = true;
+                setPanel("...você voltou...", "AMOSTRA: 03.17", "03:17 — amostra local capturada");
+                playTone(ToneGenerator.TONE_PROP_ACK, 160);
+            } else {
+                tuning = true;
+                setPanel("O rádio responde antes do botão encostar.", "RADIO: " + String.format(Locale.US, "%.2f", frequency), "LOG: rádio inspecionado");
+                playTone(ToneGenerator.TONE_CDMA_LOW_L, 120);
             }
-        }, 1700);
+        } else if (windowRect.contains(x, y)) {
+            setPanel("Lá fora, nenhuma luz. Nenhum cachorro. Nenhum vento.", currentStatus(), currentLog());
+        } else if (kitchenRect.contains(x, y)) {
+            setPanel("Tudo ficou no lugar. Até os pratos.", currentStatus(), currentLog());
+        } else if (lampRect.contains(x, y)) {
+            setPanel("A lâmpada pulsa no mesmo ritmo do chiado.", currentStatus(), currentLog());
+            playTone(ToneGenerator.TONE_CDMA_PIP, 80);
+        } else if (captured) {
+            setPanel("O rádio não estava ligado na tomada.", "AMOSTRA: 03.17", "03:17 — amostra local capturada");
+        } else {
+            setPanel("Vértice não aparece no mapa desde a evacuação.", currentStatus(), currentLog());
+        }
+        save();
     }
 
     private boolean isTuned() {
-        return Math.abs(frequency - 3.17f) <= 0.025f;
+        return frequency > 3.12f && frequency < 3.22f;
     }
 
-    private void show(String text) {
-        if (narrativeText != null) narrativeText.setText(text);
+    private String currentStatus() {
+        if (captured) return "AMOSTRA: 03.17";
+        if (tuning) return "SINTONIA: " + String.format(Locale.US, "%.2f", frequency);
+        return "RADIO: --.--";
     }
 
-    private void updateFrequencyText() {
-        if (frequencyText == null) return;
-        String status = signalCaptured ? "AMOSTRA" : tuning ? "SINTONIA" : "RADIO";
-        frequencyText.setText(status + ": " + String.format(Locale.US, "%.2f", frequency));
+    private String currentLog() {
+        return prefs.getString("log", "LOG: casa fria / sem rede");
     }
 
-    private void updateLog(String value) {
-        log = value;
+    private void save() {
+        prefs.edit().putFloat("freq", frequency).putBoolean("captured", captured).putString("log", currentLog()).apply();
+    }
+
+    private void setPanel(String text, String status, String log) {
+        prefs.edit().putString("log", log).apply();
+        TextView narrative = getRootView().findViewById(R.id.narrativeText);
+        TextView frequencyText = getRootView().findViewById(R.id.frequencyText);
+        TextView techLog = getRootView().findViewById(R.id.techLog);
+        if (narrative != null) narrative.setText(text);
+        if (frequencyText != null) frequencyText.setText(status);
         if (techLog != null) techLog.setText(log);
     }
 
-    private void saveState() {
-        prefs.edit()
-                .putBoolean(KEY_RADIO, radioInspected)
-                .putBoolean(KEY_CAPTURED, signalCaptured)
-                .putFloat(KEY_FREQ, frequency)
-                .putString(KEY_LOG, log)
-                .apply();
-    }
-
-    private void playDryClick() {
-        playSoundEffect(SoundEffectConstants.CLICK);
-        if (tone != null) tone.startTone(ToneGenerator.TONE_PROP_CLICK, 70);
-    }
-
-    private void playRadioBeep() {
-        if (tone != null) tone.startTone(ToneGenerator.TONE_CDMA_LOW_L, 120);
-    }
-
-    private void playGlitchNearSignal() {
-        long now = System.currentTimeMillis();
-        if (now - lastGlitchAt > 260) {
-            lastGlitchAt = now;
-            playGlitch();
-        }
-    }
-
-    private void playGlitch() {
-        playWave(0.16, 170, 52, true);
-    }
-
-    private void playCaptureSound() {
-        playWave(0.26, 260, 110, false);
-        if (tone != null) tone.startTone(ToneGenerator.TONE_PROP_ACK, 160);
-    }
-
-    private void playWave(double seconds, int startHz, int endHz, boolean noisy) {
-        final int sampleRate = 8000;
-        final int samples = Math.max(1, (int) (sampleRate * seconds));
-        final short[] data = new short[samples];
-        for (int i = 0; i < samples; i++) {
-            double t = i / (double) sampleRate;
-            double sweep = startHz + (endHz - startHz) * (i / (double) samples);
-            double wave = Math.sin(2.0 * Math.PI * sweep * t);
-            if (noisy) wave += (((i * 73) % 41) - 20) / 24.0;
-            data[i] = (short) (Math.max(-1.0, Math.min(1.0, wave)) * 6000);
-        }
-        AudioTrack track = new AudioTrack(AudioManager.STREAM_MUSIC, sampleRate,
-                AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT,
-                data.length * 2, AudioTrack.MODE_STATIC);
-        track.write(data, 0, data.length);
-        track.play();
+    private void playTone(int toneId, int durationMs) {
+        if (tone != null) tone.startTone(toneId, durationMs);
     }
 }
