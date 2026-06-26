@@ -8,8 +8,8 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowInsets;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,8 +17,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.frequenciazero.databinding.ActivityMainBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.materialswitch.MaterialSwitch;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,15 +41,35 @@ public class AppActivity extends AppCompatActivity {
     private static final String KEY_CURIOSITY = "curiosity";
     private static final String KEY_MEMORY = "memory";
 
-    private ActivityMainBinding binding;
     private SharedPreferences prefs;
     private AudioEngine audio;
+
+    private TextView screenTitle;
+    private TextView screenSubtitle;
+    private LinearLayout screenMessages;
+    private LinearLayout screenTransmissions;
+    private LinearLayout screenRestore;
+    private LinearLayout screenLog;
+    private View screenMap;
+    private LinearLayout screenSettings;
+    private RecyclerView messageList;
+    private RecyclerView transmissionList;
+    private RecyclerView logList;
+    private ChipGroup responseGroup;
+    private TextView frequencyReadout;
+    private TextView restoreStatus;
+    private SpectrogramView spectrogramView;
+    private SeekBar frequencySlider;
+    private MaterialButton captureButton;
+    private MaterialSwitch soundSwitch;
+
     private final ArrayList<Message> messages = new ArrayList<>();
     private final ArrayList<Transmission> transmissions = new ArrayList<>();
     private final ArrayList<String> logEntries = new ArrayList<>();
     private MessageAdapter messageAdapter;
     private TransmissionAdapter transmissionAdapter;
     private LogAdapter logAdapter;
+
     private boolean responded;
     private boolean captured;
     private boolean nearLogged;
@@ -63,11 +86,11 @@ public class AppActivity extends AppCompatActivity {
         Window window = getWindow();
         window.setStatusBarColor(Color.BLACK);
         window.setNavigationBarColor(Color.BLACK);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_main);
 
         prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
         audio = new AudioEngine(this);
+        bindViews();
         loadState();
         setupLists();
         setupResponses();
@@ -85,6 +108,27 @@ public class AppActivity extends AppCompatActivity {
     protected void onDestroy() {
         if (audio != null) audio.release();
         super.onDestroy();
+    }
+
+    private void bindViews() {
+        screenTitle = findViewById(R.id.screenTitle);
+        screenSubtitle = findViewById(R.id.screenSubtitle);
+        screenMessages = findViewById(R.id.screenMessages);
+        screenTransmissions = findViewById(R.id.screenTransmissions);
+        screenRestore = findViewById(R.id.screenRestore);
+        screenLog = findViewById(R.id.screenLog);
+        screenMap = findViewById(R.id.screenMap);
+        screenSettings = findViewById(R.id.screenSettings);
+        messageList = findViewById(R.id.messageList);
+        transmissionList = findViewById(R.id.transmissionList);
+        logList = findViewById(R.id.logList);
+        responseGroup = findViewById(R.id.responseGroup);
+        frequencyReadout = findViewById(R.id.frequencyReadout);
+        restoreStatus = findViewById(R.id.restoreStatus);
+        spectrogramView = findViewById(R.id.spectrogramView);
+        frequencySlider = findViewById(R.id.frequencySlider);
+        captureButton = findViewById(R.id.captureButton);
+        soundSwitch = findViewById(R.id.soundSwitch);
     }
 
     private void loadState() {
@@ -115,14 +159,14 @@ public class AppActivity extends AppCompatActivity {
                 .putInt(KEY_TRUST, protocolTrust)
                 .putInt(KEY_CURIOSITY, signalCuriosity)
                 .putInt(KEY_MEMORY, memoryResistance)
-                .putBoolean(KEY_SOUND, binding.soundSwitch.isChecked())
+                .putBoolean(KEY_SOUND, soundSwitch.isChecked())
                 .apply();
     }
 
     private void setupLists() {
         messageAdapter = new MessageAdapter(messages);
-        binding.messageList.setLayoutManager(new LinearLayoutManager(this));
-        binding.messageList.setAdapter(messageAdapter);
+        messageList.setLayoutManager(new LinearLayoutManager(this));
+        messageList.setAdapter(messageAdapter);
 
         transmissionAdapter = new TransmissionAdapter(transmissions, new TransmissionAdapter.Listener() {
             @Override
@@ -132,28 +176,28 @@ public class AppActivity extends AppCompatActivity {
                 showRestore();
             }
         });
-        binding.transmissionList.setLayoutManager(new LinearLayoutManager(this));
-        binding.transmissionList.setAdapter(transmissionAdapter);
+        transmissionList.setLayoutManager(new LinearLayoutManager(this));
+        transmissionList.setAdapter(transmissionAdapter);
 
         logAdapter = new LogAdapter(logEntries);
-        binding.logList.setLayoutManager(new LinearLayoutManager(this));
-        binding.logList.setAdapter(logAdapter);
+        logList.setLayoutManager(new LinearLayoutManager(this));
+        logList.setAdapter(logAdapter);
     }
 
     private void setupResponses() {
-        binding.responseConfirm.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.responseConfirm).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 answer("Confirmado.", 0);
             }
         });
-        binding.responseFrequency.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.responseFrequency).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 answer("Que frequência?", 1);
             }
         });
-        binding.responseMemory.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.responseMemory).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 answer("Por que eu esqueceria?", 2);
@@ -162,14 +206,26 @@ public class AppActivity extends AppCompatActivity {
     }
 
     private void setupRestore() {
-        binding.frequencySlider.setValue(frequency);
+        frequencySlider.setMax(75);
+        frequencySlider.setProgress(frequencyToProgress(frequency));
         updateRestore(false);
-        binding.frequencySlider.addOnChangeListener((slider, value, fromUser) -> {
-            frequency = value;
-            updateRestore(fromUser);
-            saveState();
+        frequencySlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                frequency = 2.70f + (progress / 100f);
+                updateRestore(fromUser);
+                saveState();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
-        binding.captureButton.setOnClickListener(new View.OnClickListener() {
+        captureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 captureSample();
@@ -177,8 +233,13 @@ public class AppActivity extends AppCompatActivity {
         });
     }
 
+    private int frequencyToProgress(float value) {
+        return Math.max(0, Math.min(75, Math.round((value - 2.70f) * 100f)));
+    }
+
     private void setupNavigation() {
-        binding.bottomNav.setOnItemSelectedListener(item -> {
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
+        bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_messages) {
                 showMessages();
@@ -201,13 +262,14 @@ public class AppActivity extends AppCompatActivity {
     }
 
     private void setupSettings() {
-        binding.soundSwitch.setChecked(prefs.getBoolean(KEY_SOUND, true));
-        binding.soundSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        soundSwitch.setChecked(prefs.getBoolean(KEY_SOUND, true));
+        soundSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             audio.setEnabled(isChecked);
             prefs.edit().putBoolean(KEY_SOUND, isChecked).apply();
             addLog("CFG", isChecked ? "audio enabled" : "audio muted");
         });
-        binding.resetButton.setOnClickListener(new View.OnClickListener() {
+        MaterialButton resetButton = findViewById(R.id.resetButton);
+        resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 resetProgress();
@@ -218,13 +280,9 @@ public class AppActivity extends AppCompatActivity {
     private void answer(String text, int branch) {
         responded = true;
         response = text;
-        if (branch == 0) {
-            protocolTrust += 2;
-        } else if (branch == 1) {
-            signalCuriosity += 2;
-        } else {
-            memoryResistance += 2;
-        }
+        if (branch == 0) protocolTrust += 2;
+        else if (branch == 1) signalCuriosity += 2;
+        else memoryResistance += 2;
         audio.playMessage();
         addLog("MSG_TX", text + " / hidden state updated");
         saveState();
@@ -243,9 +301,9 @@ public class AppActivity extends AppCompatActivity {
             messages.add(new Message("ELIAS", response, true));
             messages.add(new Message("HELENA", "A transmissão foi isolada. Restaure a amostra, não execute o bruto.", false));
         }
-        binding.responseGroup.setVisibility(responded ? View.GONE : View.VISIBLE);
+        responseGroup.setVisibility(responded ? View.GONE : View.VISIBLE);
         messageAdapter.notifyDataSetChanged();
-        if (!messages.isEmpty()) binding.messageList.scrollToPosition(messages.size() - 1);
+        if (!messages.isEmpty()) messageList.scrollToPosition(messages.size() - 1);
     }
 
     private void renderTransmissions() {
@@ -260,26 +318,26 @@ public class AppActivity extends AppCompatActivity {
 
     private void renderLog() {
         logAdapter.notifyDataSetChanged();
-        if (!logEntries.isEmpty()) binding.logList.scrollToPosition(logEntries.size() - 1);
+        if (!logEntries.isEmpty()) logList.scrollToPosition(logEntries.size() - 1);
     }
 
     private void updateRestore(boolean fromUser) {
-        binding.frequencyReadout.setText(String.format(Locale.US, "%.2f", frequency));
-        binding.spectrogramView.setFrequency(frequency);
-        binding.spectrogramView.setCaptured(captured);
+        frequencyReadout.setText(String.format(Locale.US, "%.2f", frequency));
+        spectrogramView.setFrequency(frequency);
+        spectrogramView.setCaptured(captured);
         boolean near = Math.abs(frequency - 3.17f) <= 0.025f;
-        binding.captureButton.setEnabled(near && !captured);
+        captureButton.setEnabled(near && !captured);
         if (captured) {
-            binding.restoreStatus.setText("...você voltou...");
+            restoreStatus.setText("...você voltou...");
         } else if (near) {
-            binding.restoreStatus.setText("sinal estabilizado / pronto para captura");
+            restoreStatus.setText("sinal estabilizado / pronto para captura");
             if (!nearLogged) {
                 nearLogged = true;
                 addLog("FREQ", "03.17 stabilized / carrier visible");
                 audio.playNoise();
             }
         } else {
-            binding.restoreStatus.setText("ruído bruto / procure a portadora 03.17");
+            restoreStatus.setText("ruído bruto / procure a portadora 03.17");
             nearLogged = false;
         }
         int bucket = Math.round(frequency * 100f);
@@ -293,10 +351,10 @@ public class AppActivity extends AppCompatActivity {
         if (captured || Math.abs(frequency - 3.17f) > 0.025f) return;
         captured = true;
         frequency = 3.17f;
-        binding.frequencySlider.setValue(frequency);
-        binding.restoreStatus.setText("...você voltou...");
-        binding.captureButton.setEnabled(false);
-        binding.spectrogramView.setCaptured(true);
+        frequencySlider.setProgress(frequencyToProgress(frequency));
+        restoreStatus.setText("...você voltou...");
+        captureButton.setEnabled(false);
+        spectrogramView.setCaptured(true);
         audio.playCapture();
         addLog("CAPTURE", "VX_0317_A sample captured / fragment decoded");
         saveState();
@@ -325,9 +383,9 @@ public class AppActivity extends AppCompatActivity {
         nearLogged = false;
         lastLoggedFrequency = -1000;
         logEntries.clear();
-        binding.soundSwitch.setChecked(true);
+        soundSwitch.setChecked(true);
         audio.setEnabled(true);
-        binding.frequencySlider.setValue(frequency);
+        frequencySlider.setProgress(frequencyToProgress(frequency));
         addLog("BOOT", "progress reset / clean session");
         saveState();
         renderConversation();
@@ -336,51 +394,51 @@ public class AppActivity extends AppCompatActivity {
     }
 
     private void showMessages() {
-        showOnly(binding.screenMessages);
-        binding.screenTitle.setText("HELENA");
-        binding.screenSubtitle.setText("canal seguro / conversa interceptada");
+        showOnly(screenMessages);
+        screenTitle.setText("HELENA");
+        screenSubtitle.setText("canal seguro / conversa interceptada");
     }
 
     private void showTransmissions() {
-        showOnly(binding.screenTransmissions);
-        binding.screenTitle.setText("TRANSMISSÕES");
-        binding.screenSubtitle.setText("arquivos recebidos / bruto bloqueado");
+        showOnly(screenTransmissions);
+        screenTitle.setText("TRANSMISSÕES");
+        screenSubtitle.setText("arquivos recebidos / bruto bloqueado");
         addLog("TRANS", "list viewed");
     }
 
     private void showRestore() {
-        showOnly(binding.screenRestore);
-        binding.screenTitle.setText("RESTAURAÇÃO");
-        binding.screenSubtitle.setText("VX_0317_A.raw / espectrograma ativo");
+        showOnly(screenRestore);
+        screenTitle.setText("RESTAURAÇÃO");
+        screenSubtitle.setText("VX_0317_A.raw / espectrograma ativo");
         updateRestore(false);
     }
 
     private void showLog() {
-        showOnly(binding.screenLog);
-        binding.screenTitle.setText("LOG");
-        binding.screenSubtitle.setText("registro técnico automático");
+        showOnly(screenLog);
+        screenTitle.setText("LOG");
+        screenSubtitle.setText("registro técnico automático");
     }
 
     private void showMap() {
-        showOnly(binding.screenMap);
-        binding.screenTitle.setText("MAPA");
-        binding.screenSubtitle.setText("Vértice / exploração bloqueada");
+        showOnly(screenMap);
+        screenTitle.setText("MAPA");
+        screenSubtitle.setText("Vértice / exploração bloqueada");
         addLog("MAP", "passive map opened");
     }
 
     private void showSettings() {
-        showOnly(binding.screenSettings);
-        binding.screenTitle.setText("CONFIGURAÇÕES");
-        binding.screenSubtitle.setText("som / progresso / créditos");
+        showOnly(screenSettings);
+        screenTitle.setText("CONFIGURAÇÕES");
+        screenSubtitle.setText("som / progresso / créditos");
     }
 
     private void showOnly(View active) {
-        binding.screenMessages.setVisibility(active == binding.screenMessages ? View.VISIBLE : View.GONE);
-        binding.screenTransmissions.setVisibility(active == binding.screenTransmissions ? View.VISIBLE : View.GONE);
-        binding.screenRestore.setVisibility(active == binding.screenRestore ? View.VISIBLE : View.GONE);
-        binding.screenLog.setVisibility(active == binding.screenLog ? View.VISIBLE : View.GONE);
-        binding.screenMap.setVisibility(active == binding.screenMap ? View.VISIBLE : View.GONE);
-        binding.screenSettings.setVisibility(active == binding.screenSettings ? View.VISIBLE : View.GONE);
+        screenMessages.setVisibility(active == screenMessages ? View.VISIBLE : View.GONE);
+        screenTransmissions.setVisibility(active == screenTransmissions ? View.VISIBLE : View.GONE);
+        screenRestore.setVisibility(active == screenRestore ? View.VISIBLE : View.GONE);
+        screenLog.setVisibility(active == screenLog ? View.VISIBLE : View.GONE);
+        screenMap.setVisibility(active == screenMap ? View.VISIBLE : View.GONE);
+        screenSettings.setVisibility(active == screenSettings ? View.VISIBLE : View.GONE);
     }
 
     private static int dp(View view, int value) {
@@ -434,17 +492,13 @@ public class AppActivity extends AppCompatActivity {
             LinearLayout row = new LinearLayout(parent.getContext());
             row.setOrientation(LinearLayout.HORIZONTAL);
             row.setPadding(0, dp(row, 5), 0, dp(row, 5));
-            row.setLayoutParams(new RecyclerView.LayoutParams(
-                    RecyclerView.LayoutParams.MATCH_PARENT,
-                    RecyclerView.LayoutParams.WRAP_CONTENT));
+            row.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
             TextView bubble = new TextView(parent.getContext());
             bubble.setTextSize(15f);
             bubble.setLineSpacing(2f, 1f);
             bubble.setPadding(dp(row, 14), dp(row, 10), dp(row, 14), dp(row, 10));
             bubble.setMaxWidth(dp(row, 310));
-            row.addView(bubble, new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            row.addView(bubble, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             return new Holder(row, bubble);
         }
 
@@ -456,11 +510,7 @@ public class AppActivity extends AppCompatActivity {
             holder.bubble.setText(message.player ? message.text : message.speaker + "\n" + message.text);
             holder.bubble.setTextColor(message.player ? Color.rgb(6, 6, 7) : Color.rgb(244, 237, 226));
             float density = holder.bubble.getResources().getDisplayMetrics().density;
-            holder.bubble.setBackground(bg(
-                    message.player ? Color.rgb(216, 116, 50) : Color.rgb(26, 23, 20),
-                    message.player ? Color.rgb(216, 116, 50) : Color.rgb(58, 48, 40),
-                    18f,
-                    density));
+            holder.bubble.setBackground(bg(message.player ? Color.rgb(216, 116, 50) : Color.rgb(26, 23, 20), message.player ? Color.rgb(216, 116, 50) : Color.rgb(58, 48, 40), 18f, density));
         }
 
         @Override
@@ -470,34 +520,21 @@ public class AppActivity extends AppCompatActivity {
 
         static class Holder extends RecyclerView.ViewHolder {
             final TextView bubble;
-
-            Holder(@NonNull View itemView, TextView bubble) {
-                super(itemView);
-                this.bubble = bubble;
-            }
+            Holder(@NonNull View itemView, TextView bubble) { super(itemView); this.bubble = bubble; }
         }
     }
 
     private static class TransmissionAdapter extends RecyclerView.Adapter<TransmissionAdapter.Holder> {
-        interface Listener {
-            void onOpen(Transmission transmission);
-        }
-
+        interface Listener { void onOpen(Transmission transmission); }
         private final List<Transmission> items;
         private final Listener listener;
-
-        TransmissionAdapter(List<Transmission> items, Listener listener) {
-            this.items = items;
-            this.listener = listener;
-        }
+        TransmissionAdapter(List<Transmission> items, Listener listener) { this.items = items; this.listener = listener; }
 
         @NonNull
         @Override
         public Holder onCreateViewHolder(@NonNull android.view.ViewGroup parent, int viewType) {
             MaterialCardView card = new MaterialCardView(parent.getContext());
-            RecyclerView.LayoutParams cardParams = new RecyclerView.LayoutParams(
-                    RecyclerView.LayoutParams.MATCH_PARENT,
-                    RecyclerView.LayoutParams.WRAP_CONTENT);
+            RecyclerView.LayoutParams cardParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
             cardParams.setMargins(0, 0, 0, dp(card, 12));
             card.setLayoutParams(cardParams);
             card.setRadius(dp(card, 8));
@@ -506,7 +543,6 @@ public class AppActivity extends AppCompatActivity {
             card.setStrokeWidth(dp(card, 1));
             card.setClickable(true);
             card.setFocusable(true);
-
             LinearLayout box = new LinearLayout(parent.getContext());
             box.setOrientation(LinearLayout.VERTICAL);
             box.setPadding(dp(card, 16), dp(card, 14), dp(card, 16), dp(card, 14));
@@ -514,11 +550,7 @@ public class AppActivity extends AppCompatActivity {
             TextView origin = rowText(parent, 13f, Color.rgb(169, 158, 144), false);
             TextView duration = rowText(parent, 13f, Color.rgb(169, 158, 144), false);
             TextView status = rowText(parent, 13f, Color.rgb(111, 155, 135), false);
-            box.addView(name);
-            box.addView(origin);
-            box.addView(duration);
-            box.addView(status);
-            card.addView(box);
+            box.addView(name); box.addView(origin); box.addView(duration); box.addView(status); card.addView(box);
             return new Holder(card, name, origin, duration, status);
         }
 
@@ -529,18 +561,11 @@ public class AppActivity extends AppCompatActivity {
             holder.origin.setText(item.origin);
             holder.duration.setText(item.duration);
             holder.status.setText(item.status);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onOpen(item);
-                }
-            });
+            holder.itemView.setOnClickListener(new View.OnClickListener() { @Override public void onClick(View view) { listener.onOpen(item); } });
         }
 
         @Override
-        public int getItemCount() {
-            return items.size();
-        }
+        public int getItemCount() { return items.size(); }
 
         private static TextView rowText(android.view.ViewGroup parent, float size, int color, boolean strong) {
             TextView text = new TextView(parent.getContext());
@@ -552,59 +577,25 @@ public class AppActivity extends AppCompatActivity {
         }
 
         static class Holder extends RecyclerView.ViewHolder {
-            final TextView name;
-            final TextView origin;
-            final TextView duration;
-            final TextView status;
-
-            Holder(@NonNull View itemView, TextView name, TextView origin, TextView duration, TextView status) {
-                super(itemView);
-                this.name = name;
-                this.origin = origin;
-                this.duration = duration;
-                this.status = status;
-            }
+            final TextView name; final TextView origin; final TextView duration; final TextView status;
+            Holder(@NonNull View itemView, TextView name, TextView origin, TextView duration, TextView status) { super(itemView); this.name = name; this.origin = origin; this.duration = duration; this.status = status; }
         }
     }
 
     private static class LogAdapter extends RecyclerView.Adapter<LogAdapter.Holder> {
         private final List<String> items;
-
-        LogAdapter(List<String> items) {
-            this.items = items;
-        }
-
-        @NonNull
-        @Override
-        public Holder onCreateViewHolder(@NonNull android.view.ViewGroup parent, int viewType) {
+        LogAdapter(List<String> items) { this.items = items; }
+        @NonNull @Override public Holder onCreateViewHolder(@NonNull android.view.ViewGroup parent, int viewType) {
             TextView text = new TextView(parent.getContext());
             text.setTextColor(Color.rgb(169, 158, 144));
             text.setTextSize(12f);
             text.setTypeface(Typeface.MONOSPACE);
             text.setPadding(0, dp(text, 6), 0, dp(text, 6));
-            text.setLayoutParams(new RecyclerView.LayoutParams(
-                    RecyclerView.LayoutParams.MATCH_PARENT,
-                    RecyclerView.LayoutParams.WRAP_CONTENT));
+            text.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
             return new Holder(text);
         }
-
-        @Override
-        public void onBindViewHolder(@NonNull Holder holder, int position) {
-            holder.text.setText(items.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return items.size();
-        }
-
-        static class Holder extends RecyclerView.ViewHolder {
-            final TextView text;
-
-            Holder(@NonNull View itemView) {
-                super(itemView);
-                text = (TextView) itemView;
-            }
-        }
+        @Override public void onBindViewHolder(@NonNull Holder holder, int position) { holder.text.setText(items.get(position)); }
+        @Override public int getItemCount() { return items.size(); }
+        static class Holder extends RecyclerView.ViewHolder { final TextView text; Holder(@NonNull View itemView) { super(itemView); text = (TextView) itemView; } }
     }
 }
