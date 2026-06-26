@@ -2,19 +2,15 @@ package com.frequenciazero;
 
 import android.content.Context;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.media.ToneGenerator;
-import android.provider.Settings;
 
 public class AudioEngine {
-    private final Context context;
     private ToneGenerator tone;
     private boolean enabled = true;
 
     public AudioEngine(Context context) {
-        this.context = context.getApplicationContext();
         try {
-            tone = new ToneGenerator(AudioManager.STREAM_MUSIC, 42);
+            tone = new ToneGenerator(AudioManager.STREAM_MUSIC, 38);
         } catch (RuntimeException ignored) {
             tone = null;
         }
@@ -24,26 +20,24 @@ public class AudioEngine {
         this.enabled = enabled;
     }
 
+    public void playClick() {
+        playTone(ToneGenerator.TONE_PROP_BEEP, 45);
+    }
+
     public void playMessage() {
-        if (!enabled) return;
-        playSystemCue(0.18f);
-        if (tone != null) tone.startTone(ToneGenerator.TONE_PROP_BEEP, 80);
+        playTone(ToneGenerator.TONE_PROP_ACK, 75);
     }
 
     public void playTransmission() {
-        if (!enabled) return;
-        if (tone != null) tone.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 120);
+        playTone(ToneGenerator.TONE_SUP_DIAL, 110);
     }
 
     public void playNoise() {
-        if (!enabled) return;
-        if (tone != null) tone.startTone(ToneGenerator.TONE_CDMA_ABBR_ALERT, 150);
+        playTone(ToneGenerator.TONE_CDMA_ABBR_ALERT, 150);
     }
 
     public void playCapture() {
-        if (!enabled) return;
-        playSystemCue(0.26f);
-        if (tone != null) tone.startTone(ToneGenerator.TONE_PROP_ACK, 180);
+        playTone(ToneGenerator.TONE_PROP_PROMPT, 210);
     }
 
     public void release() {
@@ -53,20 +47,12 @@ public class AudioEngine {
         }
     }
 
-    private void playSystemCue(float volume) {
+    private void playTone(int toneType, int durationMs) {
+        if (!enabled || tone == null) return;
         try {
-            MediaPlayer player = MediaPlayer.create(context, Settings.System.DEFAULT_NOTIFICATION_URI);
-            if (player == null) return;
-            player.setVolume(volume, volume);
-            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mediaPlayer.release();
-                }
-            });
-            player.start();
+            tone.startTone(toneType, durationMs);
         } catch (RuntimeException ignored) {
-            // ToneGenerator remains the fallback when system sounds are unavailable.
+            // Devices can refuse short generated tones; silence is safer than a crash.
         }
     }
 }
