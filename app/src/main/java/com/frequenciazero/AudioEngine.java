@@ -29,7 +29,7 @@ public class AudioEngine {
     }
 
     public void playTransmission() {
-        playTone(ToneGenerator.TONE_SUP_DIAL, 110);
+        playTone(ToneGenerator.TONE_PROP_NACK, 95);
     }
 
     public void playNoise() {
