@@ -12,7 +12,7 @@
         android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="RESTAURACAO DE FITA"
+        android:text="CONSOLE"
         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
         android:textColor="@color/c_text"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,58 +43,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fileName" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardWave"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/status"
         android:layout_width="0dp"
-        android:layout_height="180dp"
-        android:layout_marginTop="@dimen/s16"
-        app:cardBackgroundColor="@color/c_panel"
-        app:cardCornerRadius="@dimen/r16"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/s8"
+        android:text="Integridade: 42%"
+        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+        android:textColor="@color/c_text2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/energy"
-        app:strokeColor="@color/c_line"
-        app:strokeWidth="1dp">
+        app:layout_constraintTop_toBottomOf="@id/energy" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/s16">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:layout_gravity="center_vertical"
-                android:background="@color/c_gold" />
-
-            <View
-                android:layout_width="220dp"
-                android:layout_height="2dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/s32"
-                android:background="@color/c_primary" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|start"
-                android:text="Integridade: 42% | Ruido instavel detectado"
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                android:textColor="@color/c_text2" />
-        </FrameLayout>
-    </com.google.android.material.card.MaterialCardView>
+    <com.frequenciazero.ConsoleView
+        android:id="@+id/consoleView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/s16"
+        app:layout_constraintBottom_toTopOf="@id/bottomPanel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/status" />
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardSlider"
+        android:id="@+id/bottomPanel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/s16"
         app:cardBackgroundColor="@color/c_panel"
         app:cardCornerRadius="@dimen/r16"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardWave"
         app:strokeColor="@color/c_line"
         app:strokeWidth="1dp">
 
@@ -105,119 +85,22 @@
             android:padding="@dimen/s16">
 
             <com.google.android.material.textview.MaterialTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Limpar faixa de ruido"
-                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                android:textColor="@color/c_text" />
-
-            <com.google.android.material.slider.Slider
-                android:id="@+id/slider"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:stepSize="1"
-                android:value="35"
-                android:valueFrom="0"
-                android:valueTo="100" />
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/s16"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardSlider">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnClean"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="APLICAR LIMPEZA" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAmp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/s8"
-                android:text="AMPLIFICAR PICO" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCut"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/s8"
-                android:text="ISOLAR TRECHO INSTAVEL" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnStable"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/s8"
-                android:text="ESTABILIZAR ARQUIVO" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSend"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/s8"
-                android:text="ENVIAR PARA ANALISE REMOTA" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnKeep"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/s8"
-                android:text="ARQUIVAR LOCALMENTE" />
-
-            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/feedback"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/s16"
-                android:text="Aguardando operacao..."
+                android:text="Operar painel"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                android:textColor="@color/c_text2" />
+                android:textColor="@color/c_text" />
 
-            <com.google.android.material.card.MaterialCardView
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/logView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/s16"
-                app:cardBackgroundColor="@color/c_panel"
-                app:cardCornerRadius="@dimen/r16"
-                app:strokeColor="@color/c_line"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/s16">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="LOG TECNICO"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
-                        android:textColor="@color/c_text" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/logView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/s8"
-                        android:text="Nenhuma operacao registrada."
-                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                        android:textColor="@color/c_text2" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                android:layout_marginTop="@dimen/s8"
+                android:maxLines="4"
+                android:text="Nenhum registro."
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                android:textColor="@color/c_text2" />
         </LinearLayout>
-    </ScrollView>
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
