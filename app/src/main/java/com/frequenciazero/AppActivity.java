@@ -41,7 +41,7 @@ public class AppActivity extends AppCompatActivity {
 
     private boolean firstChatScheduled;
     private boolean responseChosen;
-    private boolean fileOpened;
+    private boolean audioPlayed;
     private boolean finalScheduled;
 
     @Override
@@ -174,7 +174,7 @@ public class AppActivity extends AppCompatActivity {
         if (!firstChatScheduled) {
             firstChatScheduled = true;
             scheduleHelenaMessages();
-        } else if (fileOpened && !finalScheduled) {
+        } else if (audioPlayed && !finalScheduled) {
             scheduleFinalHook();
         }
     }
@@ -226,7 +226,6 @@ public class AppActivity extends AppCompatActivity {
     }
 
     private void showFilePreview() {
-        fileOpened = true;
         audio.playGlitch();
         audioCaption.setText("Áudio parcialmente corrompido.");
         waveView.setActive(false);
@@ -252,6 +251,7 @@ public class AppActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                audioPlayed = true;
                 waveView.setActive(false);
                 playButton.setEnabled(true);
                 showChat();
