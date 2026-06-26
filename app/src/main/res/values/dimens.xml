@@ -5,4 +5,11 @@
     <dimen name="s32">32dp</dimen>
     <dimen name="r12">12dp</dimen>
     <dimen name="r16">16dp</dimen>
+
+    <dimen name="fz_screen_padding">22dp</dimen>
+    <dimen name="fz_card_radius">18dp</dimen>
+    <dimen name="fz_small_radius">12dp</dimen>
+    <dimen name="fz_chat_padding">14dp</dimen>
+    <dimen name="fz_option_height">46dp</dimen>
+    <dimen name="fz_lock_notification_height">92dp</dimen>
 </resources>
