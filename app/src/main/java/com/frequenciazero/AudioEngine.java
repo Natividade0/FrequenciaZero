@@ -22,11 +22,11 @@ public class AudioEngine {
     }
 
     public void playGlitch() {
-        play(ToneGenerator.TONE_CDMA_ABBR_ALERT, 160);
+        play(ToneGenerator.TONE_PROP_NACK, 120);
     }
 
     public void playLowEnd() {
-        play(ToneGenerator.TONE_PROP_NACK, 190);
+        play(ToneGenerator.TONE_DTMF_0, 180);
     }
 
     public void playTap() {
