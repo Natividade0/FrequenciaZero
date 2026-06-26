@@ -1,5 +1,5 @@
 package com.frequenciazero;
 
-public class ExtraState {
+public class Test {
     public static final int INITIAL = 100;
 }
