@@ -171,18 +171,16 @@
                 android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
                 android:textColor="@color/fz_text" />
 
-            <com.google.android.material.slider.Slider
+            <SeekBar
                 android:id="@+id/frequencySlider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:haloColor="@color/fz_panel"
-                app:stepSize="0.01"
-                app:thumbColor="@color/fz_ember"
-                app:trackColorActive="@color/fz_ember"
-                app:trackColorInactive="@color/fz_line"
-                app:value="2.84"
-                app:valueFrom="2.70"
-                app:valueTo="3.45" />
+                android:layout_marginTop="8dp"
+                android:max="75"
+                android:progress="14"
+                android:progressTint="@color/fz_ember"
+                android:thumbTint="@color/fz_ember"
+                android:progressBackgroundTint="@color/fz_line" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/captureButton"
