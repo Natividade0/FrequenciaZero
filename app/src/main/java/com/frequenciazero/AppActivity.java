@@ -15,6 +15,7 @@ public class AppActivity extends AppCompatActivity {
     private static final String KEY_C = "c";
     private static final String KEY_ENERGY = "energy";
     private static final String KEY_LOG = "log";
+    private static final String SPLIT = " :: ";
 
     private GameState state;
     private TextView feedback;
@@ -37,30 +38,30 @@ public class AppActivity extends AppCompatActivity {
         energy = findViewById(R.id.energy);
         logView = findViewById(R.id.logView);
 
-        bind(R.id.btnClean, 1, 1, -1, 4, "Limpeza aplicada");
-        bind(R.id.btnAmp, 0, 1, 0, 6, "Pico amplificado");
-        bind(R.id.btnCut, 1, 0, 0, 5, "Trecho isolado");
-        bind(R.id.btnStable, 2, 3, 0, 8, "Arquivo estabilizado");
-        bind(R.id.btnSend, 2, 2, 0, 2, "Pacote enviado");
-        bind(R.id.btnKeep, 0, 0, 1, 3, "Arquivo local");
+        bind(R.id.btnClean, 1, 1, -1, 4, "Limpeza aplicada", "Camada removida");
+        bind(R.id.btnAmp, 0, 1, 0, 6, "Pico amplificado", "Camada priorizada");
+        bind(R.id.btnCut, 1, 0, 0, 5, "Trecho isolado", "Camada retirada");
+        bind(R.id.btnStable, 2, 3, 0, 8, "Arquivo estabilizado", "Modulo restaurado");
+        bind(R.id.btnSend, 2, 2, 0, 2, "Pacote enviado", "Canal alimentado");
+        bind(R.id.btnKeep, 0, 0, 1, 3, "Arquivo local", "Copia preservada");
 
         updateEnergy();
         updateRhythm();
         updateLog();
     }
 
-    private void bind(int id, int a, int b, int c, int cost, String label) {
+    private void bind(int id, int a, int b, int c, int cost, String label, String secondLabel) {
         MaterialButton button = findViewById(id);
-        button.setOnClickListener(v -> apply(a, b, c, cost, label));
+        button.setOnClickListener(v -> apply(a, b, c, cost, label, secondLabel));
     }
 
-    private void apply(int a, int b, int c, int cost, String label) {
+    private void apply(int a, int b, int c, int cost, String label, String secondLabel) {
         state.addA(a);
         state.addB(b);
         state.addC(c);
         state.useEnergy(cost);
         feedback.setText(label);
-        appendLog(label);
+        appendLog(label, secondLabel);
         saveState();
         updateEnergy();
         updateRhythm();
@@ -83,9 +84,9 @@ public class AppActivity extends AppCompatActivity {
                 .apply();
     }
 
-    private void appendLog(String label) {
+    private void appendLog(String label, String secondLabel) {
         String current = prefs.getString(KEY_LOG, "");
-        prefs.edit().putString(KEY_LOG, current + label + "\n").apply();
+        prefs.edit().putString(KEY_LOG, current + label + SPLIT + secondLabel + "\n").apply();
     }
 
     private void updateEnergy() {
@@ -104,9 +105,26 @@ public class AppActivity extends AppCompatActivity {
     }
 
     private void updateLog() {
-        if (logView != null) {
-            String savedLog = prefs.getString(KEY_LOG, "Nenhuma operacao registrada.");
-            logView.setText(savedLog);
+        if (logView == null) {
+            return;
         }
+
+        String savedLog = prefs.getString(KEY_LOG, "");
+        if (savedLog == null || savedLog.trim().isEmpty()) {
+            logView.setText("Nenhuma operacao registrada.");
+            return;
+        }
+
+        boolean secondMode = state.getA() + state.getB() >= 9;
+        StringBuilder builder = new StringBuilder();
+        String[] lines = savedLog.split("\n");
+        for (String line : lines) {
+            String[] parts = line.split(SPLIT);
+            if (parts.length == 2) {
+                builder.append(secondMode ? parts[1] : parts[0]).append("\n");
+            }
+        }
+
+        logView.setText(builder.toString());
     }
 }
