@@ -12,7 +12,7 @@
         android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="CONSOLE"
+        android:text="VERTICE"
         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
         android:textColor="@color/c_text"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,7 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/s8"
-        android:text="IRIS_DIARIO_03"
+        android:text="ENTRADA NORTE"
         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
         android:textColor="@color/c_gold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,14 +48,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/s8"
-        android:text="Integridade: 42%"
+        android:text="Sinal: ausente"
         android:textAppearance="@style/TextAppearance.Material3.BodySmall"
         android:textColor="@color/c_text2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/energy" />
 
-    <com.frequenciazero.ConsoleGameView
+    <com.frequenciazero.VanSceneView
         android:id="@+id/consoleView"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -88,7 +88,7 @@
                 android:id="@+id/feedback"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Operar painel"
+                android:text="Toque para ligar o painel."
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 android:textColor="@color/c_text" />
 
@@ -103,17 +103,4 @@
                 android:textColor="@color/c_text2" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
-
-    <LinearLayout
-        android:layout_width="1dp"
-        android:layout_height="1dp"
-        android:visibility="gone">
-
-        <com.google.android.material.button.MaterialButton android:id="@+id/btnClean" android:layout_width="1dp" android:layout_height="1dp" />
-        <com.google.android.material.button.MaterialButton android:id="@+id/btnAmp" android:layout_width="1dp" android:layout_height="1dp" />
-        <com.google.android.material.button.MaterialButton android:id="@+id/btnCut" android:layout_width="1dp" android:layout_height="1dp" />
-        <com.google.android.material.button.MaterialButton android:id="@+id/btnStable" android:layout_width="1dp" android:layout_height="1dp" />
-        <com.google.android.material.button.MaterialButton android:id="@+id/btnSend" android:layout_width="1dp" android:layout_height="1dp" />
-        <com.google.android.material.button.MaterialButton android:id="@+id/btnKeep" android:layout_width="1dp" android:layout_height="1dp" />
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
