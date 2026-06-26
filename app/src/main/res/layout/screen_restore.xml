@@ -55,7 +55,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/energy" />
 
-    <com.frequenciazero.ConsoleView
+    <com.frequenciazero.ConsoleGameView
         android:id="@+id/consoleView"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -103,4 +103,17 @@
                 android:textColor="@color/c_text2" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="gone">
+
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnClean" android:layout_width="1dp" android:layout_height="1dp" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnAmp" android:layout_width="1dp" android:layout_height="1dp" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnCut" android:layout_width="1dp" android:layout_height="1dp" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnStable" android:layout_width="1dp" android:layout_height="1dp" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnSend" android:layout_width="1dp" android:layout_height="1dp" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnKeep" android:layout_width="1dp" android:layout_height="1dp" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
