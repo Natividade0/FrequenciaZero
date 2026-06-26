@@ -1,0 +1,8 @@
+<resources>
+    <dimen name="s8">8dp</dimen>
+    <dimen name="s16">16dp</dimen>
+    <dimen name="s24">24dp</dimen>
+    <dimen name="s32">32dp</dimen>
+    <dimen name="r12">12dp</dimen>
+    <dimen name="r16">16dp</dimen>
+</resources>
