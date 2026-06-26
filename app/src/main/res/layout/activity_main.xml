@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fz_ink"
+    android:orientation="vertical">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/topPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/fz_surface"
+        app:cardCornerRadius="0dp"
+        app:strokeColor="@color/fz_line"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="18dp"
+            android:paddingTop="14dp"
+            android:paddingRight="18dp"
+            android:paddingBottom="12dp">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/screenTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.08"
+                android:text="HELENA"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textColor="@color/fz_text" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/screenSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="canal seguro / vertice"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                android:textColor="@color/fz_text_muted" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <FrameLayout
+        android:id="@+id/contentHost"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/screenMessages"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/messageList"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipToPadding="false"
+                android:paddingTop="8dp"
+                android:paddingBottom="10dp" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/responseGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:chipSpacingHorizontal="8dp"
+                app:singleLine="false">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/responseConfirm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Confirmado."
+                    android:textColor="@color/fz_text"
+                    app:chipBackgroundColor="@color/fz_panel"
+                    app:chipStrokeColor="@color/fz_ember"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/responseFrequency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Que frequência?"
+                    android:textColor="@color/fz_text"
+                    app:chipBackgroundColor="@color/fz_panel"
+                    app:chipStrokeColor="@color/fz_line"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/responseMemory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Por que eu esqueceria?"
+                    android:textColor="@color/fz_text"
+                    app:chipBackgroundColor="@color/fz_panel"
+                    app:chipStrokeColor="@color/fz_warning"
+                    app:chipStrokeWidth="1dp" />
+            </com.google.android.material.chip.ChipGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/screenTransmissions"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:visibility="gone">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ARQUIVOS RECEBIDOS"
+                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                android:textColor="@color/fz_ember" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/transmissionList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="12dp"
+                android:clipToPadding="false" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/screenRestore"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:visibility="gone">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/restoreFileName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="VX_0317_A.raw"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textColor="@color/fz_text" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/restoreStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="ruído bruto / amostra bloqueada"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                android:textColor="@color/fz_text_muted" />
+
+            <com.frequenciazero.SpectrogramView
+                android:id="@+id/spectrogramView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/frequencyReadout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:gravity="center"
+                android:text="02.84"
+                android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
+                android:textColor="@color/fz_text" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/frequencySlider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:valueFrom="2.70"
+                android:valueTo="3.45"
+                android:stepSize="0.01"
+                android:value="2.84"
+                app:haloColor="@color/fz_panel"
+                app:thumbColor="@color/fz_ember"
+                app:trackColorActive="@color/fz_ember"
+                app:trackColorInactive="@color/fz_line" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/captureButton"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginTop="10dp"
+                android:enabled="false"
+                android:text="Capturar Amostra"
+                android:textAllCaps="false"
+                android:textColor="@color/fz_ink"
+                app:backgroundTint="@color/fz_ember"
+                app:cornerRadius="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/screenLog"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:visibility="gone">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/logList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false" />
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/screenMap"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="MAPA PASSIVO"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                    android:textColor="@color/fz_ember" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/mapText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:lineSpacingExtra="8dp"
+                    android:text="Cidade Vértice\nZona Morta\nAntena\nRádio Âncora"
+                    android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                    android:textColor="@color/fz_text" />
+            </LinearLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/screenSettings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:visibility="gone">
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/soundSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Som"
+                android:textColor="@color/fz_text" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/resetButton"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="20dp"
+                android:text="Resetar progresso"
+                android:textAllCaps="false"
+                app:backgroundTint="@color/fz_panel"
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/fz_warning"
+                app:strokeWidth="1dp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/creditsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="Frequência Zero\nCapítulo 1: Vértice\nUma investigação por sinais, memória e ruído."
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                android:textColor="@color/fz_text_muted" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/fz_surface"
+        app:itemActiveIndicatorStyle="@style/Widget.Material3.BottomNavigationView.ActiveIndicator"
+        app:itemIconTint="@color/fz_text_muted"
+        app:itemTextColor="@color/fz_text"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/navigation_main" />
+</LinearLayout>
