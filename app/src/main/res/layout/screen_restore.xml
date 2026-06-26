@@ -185,6 +185,39 @@
                 android:text="Aguardando operacao..."
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 android:textColor="@color/c_text2" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/s16"
+                app:cardBackgroundColor="@color/c_panel"
+                app:cardCornerRadius="@dimen/r16"
+                app:strokeColor="@color/c_line"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/s16">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="LOG TECNICO"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+                        android:textColor="@color/c_text" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/logView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/s8"
+                        android:text="Nenhuma operacao registrada."
+                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                        android:textColor="@color/c_text2" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
