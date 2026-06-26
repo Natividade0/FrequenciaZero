@@ -8,6 +8,19 @@ Esta branch entrega somente os primeiros 90 segundos jogáveis de FREQUÊNCIA ZE
 
 Não é um hub completo. Não há mapa explorável, configurações completas, dashboard técnico, lista de transmissões ou minigame de frequência neste PR.
 
+## Polimento direto de arte, motion e áudio
+
+A branch `art/prologue-assets-motion-audio-2` melhora a base do prólogo sem depender do Codex e sem adicionar dependências pesadas.
+
+O que foi reforçado:
+
+- `TitleForestView`: capa mais cinematográfica com chuva, estrada molhada, floresta em camadas, névoa e antena com luz vermelha.
+- `LockScreenView`: wallpaper interno mais parecido com celular encontrado dentro do jogo.
+- `CorruptedFileArtView`: preview do arquivo com ruído, glitch, torre e moldura de mídia corrompida.
+- `MiniWaveView`: waveform com mais vida, duas camadas e partículas de sinal.
+- `AudioEngine`: sons em camadas com `ToneGenerator` para mensagem, toque, glitch e impacto grave.
+- `ART_PACK_PROLOGUE.md`: documentação do pacote visual e sonoro do prólogo.
+
 ## Fluxo implementado
 
 1. Tela inicial cinematográfica com floresta, estrada, antena, névoa e ruído em Canvas.
@@ -25,7 +38,7 @@ Não é um hub completo. Não há mapa explorável, configurações completas, d
 ```bash
 cd /storage/emulated/0/AndroidIDEProjects/FrequenciaZero
 git fetch --all
-git checkout rebuild/prologue-game-feel
+git reset --hard origin/art/prologue-assets-motion-audio-2
 rm -rf .gradle app/build build
 ```
 
@@ -48,6 +61,8 @@ Depois, usar o botão Build/Run do AndroidIDE.
 
 ## O que ainda não existe
 
+- Assets reais em `.webp`
+- Áudios reais em `.ogg`
 - Hub ECO-0 completo
 - Mapa explorável
 - Configurações completas
@@ -59,6 +74,8 @@ Depois, usar o botão Build/Run do AndroidIDE.
 ## Próximos passos
 
 - Testar em aparelho pequeno e ajustar espaçamentos.
+- Adicionar assets reais em `drawable-nodpi` depois que o visual base for aprovado.
+- Adicionar sons reais em `res/raw` depois que o fluxo do prólogo estiver validado.
 - Adicionar variações de resposta de HELENA baseadas na escolha salva.
 - Criar a primeira mecânica de restauração no Capítulo 1.
 - Expandir Vértice e o arquivo `VX_0317_A.raw` sem quebrar o ritmo cinematográfico.
